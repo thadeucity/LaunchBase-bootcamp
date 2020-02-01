@@ -1,0 +1,312 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+*{
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+:root{
+  --color-text: #111111;
+  --color-light-text: #777777;
+  --color-banner: #FBDFDB;
+  --color-footer: #EEEEEE;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  background: white;
+  font-family: 'Roboto', sans-serif;
+  color: var(--color-text);
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 62px;
+}
+
+#wrapper {
+  max-width: 940px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+  padding: 20px;
+}
+
+/* ======================= Top Menu ======================= */
+
+header{
+  width: 100%;
+  display: grid;
+  margin-top: 38px;
+  margin-bottom: 20px;
+  grid-template-columns: 215px 1fr;
+}
+
+header nav{
+  padding-top: 2px;
+}
+
+header a{
+  font-size: 16px;
+  color: var(--color-text);
+  text-decoration: none;
+  margin-right: 30px;
+}
+
+/* ======================= Banner ======================= */
+
+#banner{
+  width: 100%;
+  height: 370px;
+  margin-bottom: 50px;
+  border-radius: 30px;
+  background-color: var(--color-banner);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  
+}
+
+#banner .info{
+  margin: auto 0;
+  padding-right: 120px;
+  padding-left: 60px;
+}
+
+h1{
+  font-size: 32px;
+  font-weight: bold;
+}
+
+#banner p{
+  font-size: 18px;
+}
+
+#banner .image{
+  margin: 0 auto;
+  align-items: flex-end;
+  display: flex;
+}
+
+/* ======================= Recipes List ======================= */
+
+h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.recipe-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.card {
+  margin-bottom: auto;
+  cursor: pointer;
+  overflow: hidden;
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.card .author{
+  font-size: 14px;
+  color: var(--color-light-text);
+}
+
+.card img{
+  border-radius: 10px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+/* ======================= FOOTER ======================= */
+
+footer {
+  background-color: var(--color-footer);
+  width: 100%;
+  color: #999999;
+  text-align: center;
+  line-height: 62px;
+}
+
+
+/* ======================= MODAL ======================= */
+
+.modal-overlay{
+  background-color: rgba(0,0,0,0.6);
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  visibility: hidden;
+}
+
+
+.modal{
+  background: white;
+  width: 50%;
+  margin: 0 auto;
+  position: relative;
+  top: 50%;
+  transform: translate(0%,-50%);
+  border-radius: 16px;
+}
+
+.modal .modal-buttons {
+  position: absolute;
+  right: 15px;
+  top: 4px;
+  cursor: pointer;
+}
+
+.modal-content{
+  padding: 30px;
+  text-align: center;
+}
+
+.modal-content img{
+  width: 100%;
+  border-radius: 15px;
+  margin-bottom: 20px;
+}
+
+#modal-title{
+  font-size: 24px;
+}
+
+#modal-author{
+  font-size: 18px;
+  color: var(--color-light-text);
+}
+
+/* ===== MODAL.ACTIVE ===== */
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal.maximize{
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+/* ========================= ABOUT ========================= */
+
+#about{
+  margin-top: 30px;
+}
+
+#about h1{
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+#about p{
+  font-size: 18px;
+  line-height: 28px;
+  margin-bottom: 30px;
+}
+
+#about h2{
+  font-size: 20px;
+  font-weight: bold;
+}
+
+
+
+/* ======================= RESPONSIVE ======================= */
+
+@media (max-width: 1000px){
+  #banner{
+    height: 270px;
+    grid-template-columns: 2fr 1fr;
+  }
+
+  #banner .info{
+    padding-right: 40px;
+    padding-left: 40px;
+  }
+
+  #banner img{
+    width: 80%;
+  }
+
+  .recipe-list {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .card img{
+    margin-bottom: 5px;
+  }
+
+  .modal{
+    width: 65%;
+  }
+
+}
+
+@media (max-width: 800px){
+  #banner{
+    height: 200px;
+  }
+
+  #banner .info{
+    padding-right: 15px;
+  }
+
+  #banner img{
+    width: 120px;
+  }
+
+  .recipe-list {
+    grid-template-columns: 1fr;
+  }
+
+  .modal{
+    width: 85%;
+  }
+
+}
+
+@media (max-width: 500px){
+  #banner{
+    height: 120px;
+  }
+
+  #banner .info{
+    padding-right: 0px;
+  }
+
+  #banner img{
+    width: 80px;
+  }
+
+  h1{
+    font-size: 24px;
+  }
+
+  h2{
+    font-size: 20px;
+  }
+  
+  #banner p{
+    font-size: 14px;
+  }
+
+  .modal{
+    width: 95%;
+  }
+ 
+}
