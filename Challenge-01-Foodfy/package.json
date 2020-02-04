@@ -1,0 +1,17 @@
+{
+  "name": "Foodfy",
+  "version": "1.0.0",
+  "description": "A project for the Rocketseat Bootcamp",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "author": "Victor Alvarenga",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nunjucks": "^3.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}

@@ -1,0 +1,78 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+
+<div id="wrapper">
+
+  <section id="cards">
+
+    <div class="card" id="starter">
+      <i class="material-icons">filter_1</i>
+      <div class="card-image-container">
+        <img src=".\img\starter.svg" alt="starter logo">
+      </div>
+      <div class="card-content">
+        <p>
+          <em>Torne-se um programador desejado</em><br>
+          no mercado com esses cursos gratuitos
+        </p>
+      </div>
+      <div class="card-info">
+        <p> 11 módulos</p>
+        <p class="card-price">Gratuito</p>
+      </div>
+    </div>
+
+    <div class="card" id="launchbase">
+      <i class="material-icons">filter_2</i>
+      <div class="card-image-container">
+        <img src=".\img\launch-base.svg" alt="launch base logo">
+      </div>
+      <div class="card-content">
+        <p>
+          <em>Domine programação do zero</em><br>
+          e tenha acesso às melhores oportunidades do mercado
+        </p>
+      </div>
+      <div class="card-info">
+        <p>21 módulos</p>
+        <p class="card-price">Consultar Valores</p>
+      </div>
+    </div>
+    
+    <div class="card" id="gostack">
+      <i class="material-icons">filter_3</i>
+      <div class="card-image-container">
+        <img src=".\img\go-stack.svg" alt="go stack logo">
+      </div>
+      <div class="card-content">
+        <p>
+          <em>Treinamento imersivo</em><br>
+          nas tecnologias mais modernas de desenvolvimento web e mobile
+        </p>
+      </div>
+      <div class="card-info">
+        <p>22 módulos</p>
+        <p class="card-price">Consultar Valores</p>
+      </div>
+    </div>
+
+  </section>
+
+  <div class="modal-overlay">
+    <div class="modal">
+      <div class="modal-buttons">   
+        <i id="maximize-modal" class="material-icons">fullscreen</i>   
+        <i id="close-modal" class="material-icons">close</i>
+      </div>
+      <div class="modal-content">
+        <iframe src="" frameborder="0"></iframe>
+      </div>
+    </div>
+  </div>  
+
+</div>
+
+<script src="./scripts.js"></script>
+
+{% endblock %}

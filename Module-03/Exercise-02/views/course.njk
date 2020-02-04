@@ -1,0 +1,24 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+
+<div id="wrapper">
+
+  <div id="course">
+
+  <div class="card" id="{{course.name}}">
+    <div class="card-image-container">
+      <img src="\img\{{course.name}}.svg" alt="{{course.name}} logo">
+    </div>
+    <div class="card-info">
+      <p class="card-price">{{course.price}}</p>
+    </div>
+  </div>
+
+  <iframe src="https://rocketseat.com.br/{{course.name}}" frameborder="0"></iframe>
+
+  </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% block head %}
+      <title>Rocketseat - About</title>
+    {% endblock %}
+    <link rel="icon" href="src/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <header>
+      <div>
+        {% for item in menuItems %}
+        <a href="{{item.url}}">{{item.name}}</a>
+        {% endfor %}
+      </div>
+    </header>
+
+    {% block content %}{% endblock %}
+    
+  </body>
+</html>
+
