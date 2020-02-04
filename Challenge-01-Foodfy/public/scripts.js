@@ -1,37 +1,20 @@
-const modalOverlay = document.querySelector('.modal-overlay');
-const modal = document.querySelector('.modal');
 const cards = document.querySelectorAll('.card');
-
-const modalTitle = document.querySelector('#modal-title');
-const modalAuthor = document.querySelector('#modal-author');
-const modalImage = document.querySelector('#modal-img');
+const recipeSections = document.querySelectorAll('.recipe-section');
 
 for (let card of cards){
   card.addEventListener("click", function(){
-    modalOverlay.classList.add('active');
     const recipeId = card.getAttribute('id');
-    modalImage.src = `./src/img/${recipeId}.png`;
-    modalTitle.innerHTML = card.querySelector('p').innerHTML;
-    modalAuthor.innerHTML = card.querySelector('.author').innerHTML;
+    window.location.href = `/recipes/${recipeId}`;
   });
 }
 
-// Close Iframe
-
-document.querySelector('#close-modal').addEventListener('click', function(){
-  modalOverlay.classList.remove('active');
-});
-
-
-// Maximize iframe 
-
-document.querySelector('#maximize-modal').addEventListener('click', function(){
-  if (!modal.classList.contains('maximize')){
-    modal.classList.add('maximize');
-    document.querySelector('#maximize-modal').innerHTML = 'fullscreen_exit';
-  } else {
-    modal.classList.remove('maximize');
-    document.querySelector('#maximize-modal').innerHTML = 'fullscreen';
-  }
-});
-
+for (let section of recipeSections){
+  section.querySelector('.toggle').addEventListener("click", function(){
+    recipeInfo = section.querySelector('.recipe-section-info');
+    if (!recipeInfo.classList.contains('active')){
+      recipeInfo.classList.add('active');
+    } else {
+      recipeInfo.classList.remove('active');
+    }
+  });
+}

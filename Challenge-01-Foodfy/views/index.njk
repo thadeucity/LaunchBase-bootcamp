@@ -1,104 +1,41 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Foodfy</title>
-    <link rel="stylesheet" href="/styles.css">
-  </head>
+{% extends "layout.njk" %}
 
-  <body>
-    <div id="wrapper">
-      <header>
-        <a href="/"><img src="/img/logo.png" alt="Foodfy Logo"></a>
-        <nav>
-          <a href="/about">About</a>
-          <a href="/recipes">Recipes</a>
-        </nav>
-      </header>
-      <main>
-        <div id="banner">
-          <div class="info">
-            <h1>The best recipes</h1>
-            <p>
-              Learn to build the best plates with recipes created
-              from professionals all around the world.
-            </p>
-          </div>
-          <div class="image">
-            <img src="/img/chef.png" alt="Chef Ilustration">
-          </div>
-        </div>
-        <h2>Mais acessadas</h2>
-        <div class="recipe-list">
+{% block content %}
 
-          <div class="card" id="burger">
-            <img src="/img/burger.png" alt="Burger">
-            <div class="card-info">
-              <p>Triple bacon burger</p>
-              <p class="author">by Jorge Relato</p>
-            </div>
-          </div>
-          
-          <div class="card" id="pizza">
-            <img src="/img/pizza.png" alt="Pizza">
-            <div class="card-info">
-              <p>4 seasons pizza</p>
-              <p class="author">by Fabiana Melo</p>
-            </div>
-          </div>
-          
-          <div class="card" id="espaguete">
-            <img src="/img/espaguete.png" alt="Spaguetti">
-            <div class="card-info">
-              <p>Garlic spaguetti</p>
-              <p class="author">by Júlia Kinoto</p>
-            </div>
-          </div>
-
-          <div class="card" id="lasanha">
-            <img src="/img/lasanha.png" alt="Lasanha">
-            <div class="card-info">
-              <p>Mac n' cheese Lasanha</p>
-              <p class="author">by Juliano Vieira</p>
-            </div>
-          </div>
-          
-          <div class="card" id="doce">
-            <img src="/img/doce.png" alt="Trufle">
-            <div class="card-info">
-              <p>Trufle bar</p>
-              <p class="author">by Ricardo Golvea</p>
-            </div>
-          </div>
-          
-          <div class="card" id="asinhas">
-            <img src="/img/asinhas.png" alt="Bufalo Wings">
-            <div class="card-info">
-              <p>Bufalo Wings</p>
-              <p class="author">by Vania Steroski</p>
-            </div>
-          </div>
-
-        </div>
-      </main>
+<main>
+  
+  <div id="banner">
+    <div class="info">
+      <h1>The best recipes</h1>
+      <p>
+        Learn to build the best plates with recipes created
+        from professionals all around the world.
+      </p>
     </div>
-    <footer>
-      <p>All rights reserved for Foodfy</p>
-    </footer>
+    <div class="image">
+      <img src="/img/chef.png" alt="Chef Ilustration">
+    </div>
+  </div>
 
-    <div class="modal-overlay">
-      <div class="modal">
-        <div class="modal-buttons">   
-          <i id="maximize-modal" class="material-icons">fullscreen</i>   
-          <i id="close-modal" class="material-icons">close</i>
-        </div>
-        <div class="modal-content">
-          <img id="modal-img" src="" alt="Burger">
-          <p id='modal-title'></p>
-          <p id="modal-author"></p>
+  <h2>Most viewed</h2>
+  <div class="recipe-list">
+
+    {% for recipe in recipeList %}
+
+      <div class="card" id="{{ loop.index0 }}">
+        <img src="{{recipe.image}}" alt="image {{recipe.title}}">
+        <div class="card-info">
+          <p>{{recipe.title}}</p>
+          <p class="author">by {{recipe.author}}</p>
         </div>
       </div>
-    </div>  
 
-    <script src="./src/scripts.js"></script>
-  </body>
-</html>
+    {% endfor %}
+
+  </div>
+
+</main>
+
+<script src="/scripts.js"></script>
+
+{% endblock %}

@@ -16,7 +16,25 @@ nunjucks.configure('./views', {
 });
 
 server.get('/', function (req, res){
-  return res.render('index');
+  return res.render('index', {recipeList: data});
+});
+
+server.get('/about', function (req, res){
+  return res.render('about');
+});
+
+server.get('/recipes', function (req, res){
+  return res.render('recipes', {recipeList: data});
+});
+
+server.get("/recipes/:index", function (req, res) {
+  const recipe = data[req.params.index];
+
+  return res.render('full_recipe', {recipe});
+})
+
+server.use(function(req, res) {
+  res.status(404).render("error404");
 });
 
 server.listen(5000, function() {
