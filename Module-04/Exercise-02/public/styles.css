@@ -1,0 +1,143 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900&display=swap');
+
+:root {
+  --color-1: #1c1f4c;
+  --color-2: #00848c;
+  --color-3: #037272;
+  --color-4: #fccf17;
+  --color-5: #fec20f;
+
+  --color-darkest-text: #111111;
+  --color-dark-text: #333333;
+  --color-medium-text: #555555;
+  --color-light-text: #999999;
+  --color-lightest-text: #BBBBBB;
+
+  --color-coolwhite: #fdfdfe;
+  --color-coolgrey: #f6f5fb;
+}
+
+*{
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+body {
+  background-color: var(--color-3);
+  color: var(--color-darkest-text);
+  font-family: 'Roboto', sans-serif;
+}
+
+header{
+  background-color: var(--color-coolwhite);
+  width: 100%;
+  padding: 30px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+header img{
+  position: absolute;
+  left: 30px;
+}
+
+.menu{
+  font-size: 22px;
+}
+
+.menu a + a{
+  margin-left: 32px;
+}
+
+.menu a{  
+  position: relative;
+  text-decoration: none;
+  color: var(--color-medium-text);
+}
+
+.menu a.active {
+  font-weight: bold;
+  color: var(--color-3);
+}
+
+.menu a:hover{
+  color: var(--color-3);
+}
+
+.menu a::after {
+  content:"";
+  width: 0%;
+  height: 2px;
+  background-color: var(--color-3);
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  transition: width 250ms ease-in-out;
+}
+
+.menu a:hover::after {
+  width: 100%;
+}
+
+/* ============ CARD ============ */
+
+.card {
+  max-width: 900px;
+  min-height: 400px;
+  margin: 32px auto;
+  background-color: var(--color-coolwhite);
+  display: grid;
+  grid-template-columns: 4fr 6fr;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 2px 1px 3px 3px rgba(0,0,0, 0.25);
+
+  animation: up 700ms ease-in-out;
+}
+
+@keyframes up{
+  from{
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+
+
+/* ============ DETAILS ============ */
+
+.info{
+  padding: 16px;
+}
+
+.info h3{
+  text-transform: uppercase;
+  font-weight: 900;
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+
+.details .item {
+  border-top: 1px dashed var(--color-lightest-text);
+  padding-top: 4px;
+  margin-bottom: 16px;
+}
+
+.details .item:first-child {
+  border: none;
+}
+
+.item div:nth-child(1){
+  padding-top: 2px;
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: 0.7px;
+}
+
+.item div:nth-child(2){
+  font-weight: bold;
+}

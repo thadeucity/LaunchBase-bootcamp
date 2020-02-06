@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% block head %}
+      <title>Pro Tutor</title>
+    {% endblock %}
+
+    <link rel="stylesheet" href="./styles.css">
+  <body>
+    <header>
+      <a href="/"><img src="/img/logo.png" alt="Foodfy Logo"></a>
+      <nav class="menu">
+        <a href="/teachers">Teachers</a>
+        <a href="/students">Students</a>
+      </nav>
+    </header>
+    
+    {% block content %}{% endblock %}
+
+  </body>
+</html>
