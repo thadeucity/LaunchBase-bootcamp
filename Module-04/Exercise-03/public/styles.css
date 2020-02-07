@@ -1,0 +1,227 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+:root {
+  --color-1: #1c1f4c;
+  --color-2: #00848c;
+  --color-3: #037272;
+  --color-4: #fccf17;
+  --color-5: #fec20f;
+
+  --color-darkest-text: #111111;
+  --color-dark-text: #333333;
+  --color-medium-text: #555555;
+  --color-light-text: #999999;
+  --color-lightest-text: #BBBBBB;
+
+  --color-coolwhite: #fdfdfe;
+  --color-coolgrey: #f0f0f0;
+
+  --color-input-box: rgba(0,0,0, 0.05);
+}
+
+*{
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+body {
+  background-color: var(--color-3);
+  color: var(--color-darkest-text);
+  font-family: 'Roboto', sans-serif;
+}
+
+header{
+  background-color: var(--color-coolwhite);
+  width: 100%;
+  padding: 30px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+header img{
+  position: absolute;
+  left: 30px;
+}
+
+.menu{
+  font-size: 22px;
+}
+
+.menu a + a{
+  margin-left: 32px;
+}
+
+.menu a{  
+  position: relative;
+  text-decoration: none;
+  color: var(--color-medium-text);
+}
+
+.menu a.active {
+  font-weight: bold;
+  color: var(--color-3);
+}
+
+.menu a:hover{
+  color: var(--color-3);
+}
+
+.menu a::after {
+  content:"";
+  width: 0%;
+  height: 2px;
+  background-color: var(--color-3);
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  transition: width 250ms ease-in-out;
+}
+
+.menu a:hover::after {
+  width: 100%;
+}
+
+/* ============ CARD ============ */
+
+.card {
+  max-width: 900px;
+  min-height: 400px;
+  margin: 32px auto;
+  background-color: var(--color-coolwhite);
+  display: grid;
+  grid-template-columns: 4fr 6fr;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 2px 1px 3px 3px rgba(0,0,0, 0.25);
+
+  animation: up 700ms ease-in-out;
+}
+
+@keyframes up{
+  from{
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+
+
+/* ============ DETAILS ============ */
+
+.info{
+  padding: 16px;
+}
+
+.info h3{
+  text-transform: uppercase;
+  font-weight: 900;
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+
+.details .item {
+  border-top: 1px dashed var(--color-lightest-text);
+  padding-top: 4px;
+  margin-bottom: 16px;
+}
+
+.details .item:first-child {
+  border: none;
+}
+
+.details .item div:nth-child(1){
+  padding-top: 2px;
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: 0.7px;
+}
+
+.details .item div:nth-child(2){
+  font-weight: bold;
+}
+
+.item span{
+  padding: 8px 16px;
+  background-color: var(--color-5);
+  border-radius: 16px;
+  color: var(--color-medium-text);
+  margin-right: 4px;
+  margin-top: 8px;
+  display: inline-block;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+/* ============ FORM ============ */
+
+form .item {
+  border-top: 1px dashed var(--color-lightest-text);
+  padding: 16px 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap:8px;
+  position: relative;
+}
+
+form .item div:nth-child(1){
+  font-weight: bold;
+}
+
+form .item div:nth-child(2){
+  color: var(--color-medium-text);
+}
+
+form .item span{
+  margin-top: 0px;
+}
+
+form input {
+  background-color: var(--color-input-box);
+  line-height: 24px;
+  width: 95%;
+  padding-left: 8px;
+  border-radius: 8px;
+  color: var(--color-medium-text);
+}
+
+input[type="radio"]{
+  width: initial;
+  margin-right: 4px;
+}
+
+form select {
+  width: 97%;
+  padding-left: 8px;
+  height: 24px;
+  border-radius: 8px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: url(/img/arrow_drop_menu.svg) 99% / 8% no-repeat var(--color-input-box);
+  color: var(--color-medium-text);
+}
+
+form .material-icons {
+  position: absolute;
+  right: 16px;
+}
+
+form button[type="submit"]{
+  padding: 8px 32px;
+  background-color: var(--color-5);
+  border-radius: 8px;
+  margin-top: 16px;
+  margin-bottom: 8px;
+  width: 100%;
+  color: var(--color-medium-text);
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}

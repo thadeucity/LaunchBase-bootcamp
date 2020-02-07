@@ -1,0 +1,96 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+
+<div class="card">
+
+  <section class="avatar" style="background: url(https://source.unsplash.com/collection/8775984/450x450) no-repeat center center / cover"></section>
+  <section class="info">
+  
+    <h3>Teacher Registration</h3>
+
+    <form class="teacher-form" method="POST" action="/teachers">
+
+      <div class="item">
+        <div>Avatar Url: </div>
+        <div>
+          <input 
+            type="url" 
+            name="avatar_url" 
+            placeholder="http://"
+          >
+        </div>
+      </div>
+
+      <div class="item">
+        <div>Teacher: </div>
+        <div>
+          <input 
+            type="text"
+            name="name"
+            placeholder="Teacher name"
+          >
+        </div>
+      </div>
+
+      <div class="item">
+        <div>Birth Date: </div>
+        <div>
+          <input 
+            type="date"
+            name="birth"
+          >
+        </div>
+      </div>
+
+      <div class="item">
+        <div>Degree: </div>
+        <div>
+          <select name="degree_lvl">
+            <option value="associate">Associate Degree </option>
+            <option value="bachelor">Bachelor's Degree</option>
+            <option value="master">Master's Degree</option>
+            <option value="doctor">Doctoral Degree</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="item">
+        <div>Degree Area: </div>
+        <div>
+          <input 
+            type="text"
+            name="degree_area"
+            placeholder="Field of graduation"
+          >
+        </div>
+      </div>
+
+      <div class="item">
+        <div>Teaching Place: </div>
+        <div>
+          <span><input type="radio" name="place" value="Distance" checked> Distance Education </span>
+          <span><input type="radio" name="place" value="Local"> In person </span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div>Teaching Areas: </div>
+        <div>
+          <input 
+            type="text"
+            name="teaching_area"
+            placeholder="Please separate all areas with a comma.""
+          >
+        </div>
+      </div>
+
+      <button type="submit">Save</button>
+
+    </form>
+
+  </section>
+
+</div>
+
+{% endblock content %}

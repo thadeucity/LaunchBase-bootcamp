@@ -1,0 +1,26 @@
+{
+  "professors": [
+    {
+      "id": 1,
+      "avatar_url": "https://google.com",
+      "name": "dadasd",
+      "degree_lvl": "associate",
+      "degree_area": "Teste",
+      "place": "Local",
+      "teaching_area": "tttteessste",
+      "birth": 1423958400000,
+      "created_at": 1581035671132
+    },
+    {
+      "id": 2,
+      "avatar_url": "https://google.com",
+      "name": "Victor Thadeu Pereira Alvarenga",
+      "degree_lvl": "master",
+      "degree_area": "Medicine",
+      "place": "Distance",
+      "teaching_area": "Portugues",
+      "birth": 631152000000,
+      "created_at": 1581035702010
+    }
+  ]
+}
