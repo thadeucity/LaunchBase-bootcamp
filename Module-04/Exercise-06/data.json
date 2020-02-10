@@ -1,0 +1,37 @@
+{
+  "professors": [
+    {
+      "id": 1,
+      "avatar_url": "https://images.unsplash.com/photo-1544717305-2782549b5136?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+      "name": "Carla Romanovi",
+      "degree_lvl": "Associate Degree",
+      "degree_area": "Architecture",
+      "place": "Local",
+      "teaching_area": "Drawing, Perspective, AutoCad",
+      "birth": 949952295000,
+      "created_at": 1581035671132
+    },
+    {
+      "id": 2,
+      "avatar_url": "https://images.unsplash.com/photo-1518556336318-c8de4355ccab?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+      "name": "Victor Thadeu Pereira Alvarenga",
+      "degree_lvl": "Master's Degree",
+      "degree_area": "Industrial Design",
+      "place": "Distance",
+      "teaching_area": "Portuguese, CSS, Javascript, Solidworks",
+      "birth": 631152000000,
+      "created_at": 1581035702010
+    },
+    {
+      "id": "3",
+      "avatar_url": "https://images.unsplash.com/photo-1519124040388-0c8421105fe0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+      "name": "Arnaldo Antunes Jr",
+      "degree_lvl": "Doctoral Degree",
+      "degree_area": "Computer Science",
+      "place": "both",
+      "teaching_area": "Portuguese, Computer Skills, JavaScript",
+      "birth": 343526400000,
+      "created_at": 1581105959581
+    }
+  ]
+}
