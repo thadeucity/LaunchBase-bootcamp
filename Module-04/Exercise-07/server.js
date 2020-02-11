@@ -26,7 +26,7 @@ server.listen(5000, function() {
 
 //npm init -y
 //npm install express
-//npm install -D nodemon. 
+//npm install -D nodemon 
 //npm install nunjucks
 //npm install browser-sync npm-run-all -D
 //npm install method-override

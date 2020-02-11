@@ -1,0 +1,82 @@
+<div class="item">
+  <div>Recipe Name</div>
+  <div>
+    <input 
+      type="text" 
+      name="title"
+      value="{{recipe.title}}"
+    >
+  </div>
+</div> 
+
+<div class="item">
+  <div>Recipe image url</div>
+  <div>
+    <input 
+      type="url" 
+      name="image"
+      value="{{recipe.image}}"
+    >
+  </div>
+</div> 
+
+<div class="item">
+  <div>Ingredients</div>
+  <div id="ingredients">
+    {% if recipe.ingredients %}
+      {% for ingredient in recipe.ingredients %}
+        <div class="ingredient">
+          <input 
+            type="text" 
+            name="ingredients[]"
+            value="{{ingredient}}"
+          >
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="ingredient">
+        <input 
+          type="text" 
+          name="ingredients[]"
+          value=""
+        >
+        </div>
+    {% endif %}
+  </div>
+  <a href="#" onclick="" class="add-ingredient">Add Ingredient</a>
+  <a href="#" onclick="" class="remove-ingr-blanks">Remove Blanks</a>
+</div>
+
+<div class="item">
+  <div>Recipe Steps</div>
+  <div id="steps">
+    {% if recipe.preparation %}
+      {% for step in recipe.preparation %}
+        <div class="step">
+          <input 
+            type="text" 
+            name="preparation[]"
+            value="{{step}}"
+          >
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="ingredient">
+        <input 
+          type="text" 
+          name="ingredients[]"
+          value=""
+        >
+        </div>
+    {% endif %}
+  </div>
+  <a href="#" onclick="" class="add-step">Add Step</a>
+  <a href="#" onclick="" class="remove-step-blanks">Remove Blanks</a>
+</div> 
+
+<div class="item">
+  <div>Adtional Info</div>
+  <div>
+    <textarea name ="information">{{recipe.information}}</textarea>
+  </div>
+</div> 
