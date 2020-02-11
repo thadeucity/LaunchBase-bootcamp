@@ -1,0 +1,103 @@
+<div class="item">
+  <div>Avatar Url: </div>
+  <div>
+    <input 
+      type="url" 
+      name="avatar_url" 
+      placeholder="http://"
+      value="{{teacher.avatar_url}}"
+    >
+  </div>
+</div>
+
+<div class="item">
+  <div>Teacher: </div>
+  <div>
+    <input 
+      type="text"
+      name="name"
+      placeholder="Teacher name"
+      value="{{teacher.name}}"
+    >
+  </div>
+</div>
+
+<div class="item">
+  <div>Birth Date: </div>
+  <div>
+    <input 
+      type="date"
+      name="birth"
+      value="{{teacher.birth}}"
+    >
+  </div>
+</div>
+
+<div class="item">
+  <div>Degree: </div>
+  <div>
+    <select name="degree_lvl">
+      <option value="Associate Degree" {% if teacher.degree_lvl == "Associate Degree" %} selected {% endif %}>Associate Degree</option>
+      <option value="Bachelor's Degree" {% if teacher.degree_lvl == "Bachelor's Degree" %} selected {% endif %}>Bachelor's Degree</option>
+      <option value="Master's Degree" {% if teacher.degree_lvl == "Master's Degree" %} selected {% endif %}>Master's Degree</option>
+      <option value="Doctoral Degree" {% if teacher.degree_lvl == "Doctoral Degree" %} selected {% endif %}>Doctoral Degree</option>
+    </select>
+  </div>
+</div>
+
+<div class="item">
+  <div>Degree Area: </div>
+  <div>
+    <input 
+      type="text"
+      name="degree_area"
+      placeholder="Field of graduation"
+      value = "{{teacher.degree_area}}"
+    >
+  </div>
+</div>
+
+<div class="item">
+  <div>Teaching Place: </div>
+  <div>
+
+    <span>
+      <input 
+        type="radio" 
+        name="place" 
+        value="Online" 
+        {% if (teacher.place != "both") and (teacher.place != "In Person") %} checked {% endif %}
+        > Online
+    </span>
+
+    <span>
+      <input 
+        type="radio" 
+        name="place" 
+        value="In Person" 
+        {% if teacher.place == "In Person" %} checked {% endif %}
+        > In Person
+    </span>
+
+    <span>
+      <input 
+        type="radio" 
+        name="place" 
+        value="both" {% if teacher.place == "both" %} checked {% endif %}
+        > Both
+    </span>
+
+  </div>
+</div>
+
+<div class="item">
+  <div>Teaching Areas: </div>
+  <div>
+    <input 
+      type="text"
+      name="teaching_area"
+      placeholder="Please separate all areas with a comma."
+      value="{{teacher.teaching_area}}"
+    >
+  </div>
+</div>
