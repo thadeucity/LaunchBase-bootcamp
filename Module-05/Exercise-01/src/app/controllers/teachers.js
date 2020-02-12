@@ -1,53 +1,34 @@
-const fs = require('fs');
-const data = require('./data.json');
-const { age, convertDate, date } = require('../../lib/utils');
-
+const Teacher = require('../model/Teacher');
+const { age, date } = require('../../lib/utils');
 
 module.exports = {
-
   index(req, res){
-    let teachers = [];
-    let teacher = {};
-
-    for (professor of data.professors){
-      teacher = {
-        ...professor,
-        teaching_area: professor.teaching_area.split(',')
+    Teacher.all(function(teachers){
+      for (teacher of teachers){
+        teacher.teaching_area = teacher.teaching_area.split(',');
       }
-      teachers.push(teacher);
-    }
-
-    return res.render('teachers/index', {teachers});
+      return res.render('teachers/index', {teachers});
+    });
   },
 
   show(req, res){
-    const{ id } = req.params;
+    Teacher.find(req.params.id, function(teacher){
+      if (!teacher) res.send("This professor was not found");
 
-    const foundTeacher = data.professors.find(function(teacher){
-      return teacher.id == id;
+      teacher.age = age(teacher.birth);
+      teacher.degree = `${teacher.degree_lvl} in ${teacher.degree_area}`;
+
+      if (teacher.place == 'both') {
+        teacher.place = ['Online', 'In Person'];
+      } else{
+        teacher.place = [teacher.place];
+      }
+
+      teacher.teaching_area = teacher.teaching_area.split(',');
+      teacher.created_at = date(teacher.created_at).format;
+
+      return res.render('teachers/show', { teacher });
     });
-
-    if (!foundTeacher) return res.send("This professor was not found");
-
-    let teachPlace = [];
-
-    if (foundTeacher.place == 'both'){
-      teachPlace = ['Online', 'In Person'];
-    } else {
-      teachPlace = [foundTeacher.place];
-    }
-
-    const teacher = {
-      ...foundTeacher,
-      age: age(foundTeacher.birth),
-      degree: `${foundTeacher.degree_lvl} in ${foundTeacher.degree_area}`,
-      place: teachPlace,
-      teaching_area: foundTeacher.teaching_area.split(','),
-      created_at: convertDate(foundTeacher.created_at)
-    }
-
-    return res.render('teachers/show', { teacher });
-
   },
 
   create(req, res) {
@@ -55,108 +36,40 @@ module.exports = {
   },
 
   post(req, res){
-
     const keys = Object.keys(req.body);
 
-    
     for (key of keys){
-      if(req.body[key] == ""){
-        return res.send('Please, fill all fields');
-      }
+      if(req.body[key] == "") return res.send('Please, fill all fields');
     }
 
-    let {
-      avatar_url,
-      name,
-      birth,
-      degree_lvl,
-      degree_area,
-      place,
-      teaching_area
-    } = req.body;
-
-    birth = Date.parse(birth);
-    const created_at = Date.now();
-    const id = Number(data.professors.length) + 1;
-
-    data.professors.push({
-      id,
-      avatar_url,
-      name,
-      degree_lvl,
-      degree_area,
-      place,
-      teaching_area,
-      birth,
-      created_at
+    Teacher.create(req.body, function(teacher){
+      return res.redirect(`/teachers/${teacher.id}`);
     });
-
-    fs.writeFile('data.json', JSON.stringify(data, null, 2), function(err){
-      if (err) return res.send('Write file error!');
-
-      return res.redirect('/teachers');
-    });
-
   },
 
   edit(req, res){
-    const{ id } = req.params;
-
-    const foundTeacher = data.professors.find(function(teacher){
-      return teacher.id == id;
+    Teacher.find(req.params.id, function(teacher){
+      if (!teacher) res.send("This professor was not found");
+      teacher.birth = date(teacher.birth).iso;
+      return res.render('teachers/edit', { teacher });
     });
-
-    if (!foundTeacher) return res.send("This professor was not found");
-
-    let teacher = {
-      ...foundTeacher,
-      birth: date(foundTeacher.birth).iso
-    }
-
-    return res.render('teachers/edit', { teacher });
   },
 
   put(req, res){
-    const { id } = req.body;
-    let index = 0;
+    const keys = Object.keys(req.body);
 
-    const foundTeacher = data.professors.find(function(teacher, foundIndex){
-      if (id == teacher.id){
-        index = foundIndex;
-        return true;
-      }
-    });
-
-    if (!foundTeacher) return res.send("This professor was not found");
-
-    const teacher = {
-      ...foundTeacher,
-      ...req.body,
-      birth: Date.parse(req.body.birth)
+    for (key of keys){
+      if(req.body[key] == "") return res.send('Please, fill all fields');
     }
 
-    data.professors[index] = teacher;
-
-    fs.writeFile('data.json', JSON.stringify(data, null, 2), function(err) {
-      if(err) return res.send("Write error");
-
-      return res.redirect(`/teachers/${id}`)
+    Teacher.update(req.body, function(){
+      return res.redirect(`/teachers/${req.body.id}`);
     });
   },
 
   delete(req, res){
-    const { id } = req.body;
-
-    const filteredTeachers = data.professors.filter(function(teacher){
-      return teacher.id != id;
-    });
-
-    data.professors = filteredTeachers;
-
-    fs.writeFile("data.json", JSON.stringify(data, null, 2), function(err){
-      if (err) return res.send("Error writing file");
-
-      return res.redirect("/teachers");
+    Teacher.delete(req.body.id, function(){
+      return res.redirect(`/teachers`);
     });
   }
 
