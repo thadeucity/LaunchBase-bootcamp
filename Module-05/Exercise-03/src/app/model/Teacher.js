@@ -4,8 +4,10 @@ const { date } = require('../../lib/utils');
 module.exports = {
   all(callback){
     const query = `
-      SELECT * 
-      FROM teachers 
+      SELECT teachers.*, count(students) AS total_students 
+      FROM teachers
+      LEFT JOIN students ON (teachers.id = students.teacher_id)
+      GROUP BY teachers.id
       ORDER BY name ASC
     `;
 

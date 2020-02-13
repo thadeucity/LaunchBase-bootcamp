@@ -9,6 +9,7 @@
       <tr>
         <th>Teacher</th>
         <th>Teaching Areas</th>
+        <th>Students</th>
         <th>Action</th>
       </tr>
     </thead>
@@ -25,6 +26,7 @@
             <span class="teaching-area">{{area}}</span>
           {% endfor %}
         </td> 
+        <td>{{teacher.total_students}}</td>
         <td><a href="/teachers/{{teacher.id}}">Open</a></td>
       </tr>
       {% endfor %}

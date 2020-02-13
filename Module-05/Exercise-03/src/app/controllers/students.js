@@ -30,7 +30,10 @@ module.exports = {
   },
 
   create(req, res) {
-    return res.render('students/create', {studentDegrees});
+    Student.teacherSelectOptions(function(list){
+      return res.render('students/create', {studentDegrees, teachers_list: list});
+    });
+    
   },
 
   post(req, res){
@@ -49,7 +52,9 @@ module.exports = {
     Student.find(req.params.id, function(student){
       if (!student) res.send("This student was not found");
       student.birth = date(student.birth).iso;
-      return res.render('students/edit', { student, studentDegrees });
+      Student.teacherSelectOptions(function(list){
+        return res.render('students/edit', { student, studentDegrees,  teachers_list: list});
+      });
     });
   },
 

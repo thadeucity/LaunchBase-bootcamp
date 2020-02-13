@@ -48,7 +48,7 @@
   <div>
     <select name="degree_lvl">
       {% for degree in studentDegrees %}
-        <option value="{{degree}}">
+        <option value="{{degree}}" {% if student.degree == degree %} selected {%endif%}>
           {{degree}}
         </option>
       {% endfor %}
@@ -99,6 +99,20 @@
       placeholder="Amount of study hours"
       value="{{student.load}}"
     >
+  </div>
+</div>
+
+<div class="item">
+  <div>Teacher: </div>
+  <div>
+    <select name="teacher_id">
+      {% for teacher in teachers_list %}
+        <option value="{{teacher.id}}" {% if student.teacher_id == teacher.id %} selected {%endif%}>
+          {{teacher.name}}
+        </option>
+      {% endfor %}
+
+    </select>
   </div>
 </div>
 

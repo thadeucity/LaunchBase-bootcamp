@@ -47,9 +47,10 @@ module.exports = {
 
   find(id, callback){
     const query = `
-      SELECT * 
+      SELECT students.*, teachers.name AS teacher_name 
       FROM students 
-      WHERE id = $1
+      LEFT JOIN teachers ON (students.teacher_id = teachers.id)
+      WHERE students.id = $1
     `;
 
     db.query(query, [id], function(err, results){
@@ -97,13 +98,15 @@ module.exports = {
     });
   },
 
-  levels(){
-    const query = `SELECT * FROM settings WHERE name = 'studentDegrees'`;
+  teacherSelectOptions(callback){
+    const query = `SELECT id, name
+      FROM teachers 
+      ORDER BY name ASC
+    `;
 
     db.query(query, function(err, results){
       if (err) throw `Database Error! ${err}`;
-      console.log(results.rows[0].value)
-      return (results.rows[0].value);
+      callback (results.rows);
     });
   }
 }
