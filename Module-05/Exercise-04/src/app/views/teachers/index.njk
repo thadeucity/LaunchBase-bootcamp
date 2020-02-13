@@ -1,0 +1,59 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+
+<div class="card table-container">
+
+  <div class="index-card-header">
+    <form class="search-bar" action="/teachers" method="GET">
+      <input 
+        type="text"
+        name="filter"
+        placeholder="Nome ou Atendimento"
+        value={{filter}}
+      >
+      <button type="submit">Search</button>
+    </form>
+  </div>
+
+  <table>
+
+    <thead>
+      <tr>
+        <th>Teacher</th>
+        <th>Teaching Areas</th>
+        <th>Students</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for teacher in teachers %}
+      <tr>
+        <td>
+          <span style="background-image: url({{teacher.avatar_url}})"></span>
+          {{teacher.name}}
+        </td>
+        <td>
+          {% for area in teacher.teaching_area %}
+            <span class="teaching-area">{{area}}</span>
+          {% endfor %}
+        </td> 
+        <td>{{teacher.total_students}}</td>
+        <td><a href="/teachers/{{teacher.id}}">Open</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  
+  </table>
+  <a id="new-user" href="/teachers/create">Add Teacher</a>
+  
+  <div
+    class="pagination"
+    data-page={{pagination.page}}
+    data-total={{pagination.total}}
+    data-filter={{filter}}
+  ></div>
+</div>
+
+{% endblock content %}

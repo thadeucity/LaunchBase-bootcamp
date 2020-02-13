@@ -1,0 +1,461 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+:root {
+  --color-1: #1c1f4c;
+  --color-2: #00848c;
+  --color-3: #037272;
+  --color-4: #fccf17;
+  --color-5: #fec20f;
+
+  --color-darkest-text: #111111;
+  --color-dark-text: #333333;
+  --color-medium-text: #555555; 
+  --color-light-text: #999999;
+  --color-lightest-text: #BBBBBB;
+
+  --color-coolwhite: #fdfdfe;
+  --color-coolgrey: #f0f0f0;
+
+  --color-input-box: rgba(0,0,0, 0.05);
+}
+
+*{
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+body {
+  background-color: var(--color-3);
+  color: var(--color-darkest-text);
+  font-family: 'Roboto', sans-serif;
+}
+
+header{
+  background-color: var(--color-coolwhite); 
+  width: 100%;
+  padding: 32px;
+  padding-right: 64px;
+  text-align: right;
+  box-sizing: border-box;
+
+}
+
+header img{
+  position: absolute;
+  left: 30px;
+}
+
+.menu{
+  font-size: 22px;
+}
+
+.menu a + a{
+  margin-left: 32px;
+}
+
+.menu a{  
+  position: relative;
+  text-decoration: none;
+  color: var(--color-medium-text);
+}
+
+.menu a.active {
+  font-weight: bold;
+  color: var(--color-3);
+}
+
+.menu a:hover{
+  color: var(--color-3);
+}
+
+.menu a::after {
+  content:"";
+  width: 0%;
+  height: 2px;
+  background-color: var(--color-3);
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  transition: width 250ms ease-in-out;
+}
+
+.menu a:hover::after {
+  width: 100%;
+}
+
+/* ============ CARD ============ */
+
+.card {
+  max-width: 900px;
+  min-height: 400px;
+  margin: 32px auto;
+  background-color: var(--color-coolwhite);
+  display: grid;
+  grid-template-columns: 4fr 6fr;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 2px 1px 3px 3px rgba(0,0,0, 0.25);
+  position: relative;
+
+  animation: up 700ms ease-in-out;
+}
+
+@keyframes up{
+  from{
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+
+
+/* ============ DETAILS ============ */
+
+.info{
+  padding: 16px;
+  position: relative;
+}
+
+.info h3{
+  text-transform: uppercase;
+  font-weight: 900;
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+
+.details .item {
+  border-top: 1px dashed var(--color-lightest-text);
+  padding-top: 4px;
+  margin-bottom: 16px;
+}
+
+.details .item:first-child {
+  border: none;
+}
+
+.details .item div:nth-child(1){
+  padding-top: 2px;
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: 0.7px;
+}
+
+.details .item div:nth-child(2){
+  font-weight: bold;
+}
+
+.item span{
+  padding: 8px 16px;
+  background-color: var(--color-5);
+  border-radius: 16px;
+  color: var(--color-medium-text);
+  margin-right: 4px;
+  margin-top: 8px;
+  display: inline-block;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+/* ============ FORM ============ */
+
+form .item {
+  border-top: 1px dashed var(--color-lightest-text);
+  padding: 16px 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap:8px;
+  position: relative;
+}
+
+form .item div:nth-child(1){
+  font-weight: bold;
+}
+
+form .item div:nth-child(2){
+  color: var(--color-medium-text);
+}
+
+form .item span{
+  margin-top: 0px;
+}
+
+form input {
+  background-color: var(--color-input-box);
+  line-height: 24px;
+  width: 95%;
+  padding-left: 8px;
+  border-radius: 8px;
+  color: var(--color-medium-text);
+}
+
+input[type="radio"]{
+  width: initial;
+  margin-right: 4px;
+}
+
+form select {
+  width: 97%;
+  padding-left: 8px;
+  height: 24px;
+  border-radius: 8px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: url(/img/arrow_drop_menu.svg) 99% / 7% no-repeat var(--color-input-box);
+  color: var(--color-medium-text);
+}
+
+form .material-icons {
+  position: absolute;
+  right: 16px;
+}
+
+a.button,
+form button[type="submit"]{
+  padding: 8px 32px;
+  background-color: var(--color-5);
+  border-radius: 8px;
+  margin-top: 16px;
+  margin-bottom: 8px;
+  width: 100%;
+  color: var(--color-medium-text);
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  z-index: 2;
+}
+
+a.button {
+  margin-top: 32px;
+  display: block;
+  box-sizing: border-box;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.delete{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: inherit;
+  box-sizing: border-box;
+}
+
+.btn-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  grid-template-areas: "save delete";
+  z-index: 1;
+}
+
+button[type="submit"].save-btn{
+  grid-area: save;
+}
+
+button[type="submit"].delete-btn{
+  grid-area: delete;
+  background-color: var(--color-3);
+  color: var(--color-coolgrey);
+}
+
+.table-container {
+  padding: 16px;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+}
+
+.table-container table{
+  width: 100%;
+  text-align: left;
+  margin-bottom: 32px;
+}
+
+.table-container table thead tr th:nth-child(1){
+  width: 30%;
+}
+
+.table-container table thead tr th:nth-child(2){
+  width: 52%;
+}
+
+.table-container table thead tr th:nth-child(3){
+  text-align: center;
+  width: 8%;
+}
+
+.table-container table thead tr th:nth-child(4){
+  text-align: center;
+  width: 10%;
+}
+
+.table-container table thead tr.student th:nth-child(1){
+  width: 40%;
+}
+
+.table-container table thead tr.student th:nth-child(2){
+  width: 32%;
+}
+
+.table-container table thead tr.student th:nth-child(3){
+  width: 18%;
+  text-align: left;
+}
+
+.table-container table thead tr.student th:nth-child(4){
+  text-align: center;
+  width: 10%;
+}
+
+.table-container table thead tr th{
+  padding-bottom: 8px;
+}
+
+.table-container table tbody tr td{
+  padding: 24px 0;
+  border-top: dashed 1px var(--color-lightest-text);
+  vertical-align: center;
+}
+
+.table-container table tbody tr td:first-child{
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 45px 1fr;
+  align-items: center;
+}
+
+.table-container table tbody tr td:nth-child(3){
+  text-align: center;
+}
+
+.table-container table tbody tr td:last-child{
+  text-align: center;
+}
+
+.table-container table tbody tr td span{
+  width: 40px;
+  height: 40px;  
+  background-position: center;
+  background-size: cover;
+  border-radius: 50%;
+  box-shadow: 3px 1px 6px -4px black;
+}
+
+.table-container span.teaching-area {
+  padding: 8px 16px;
+  background-color: var(--color-5);
+  border-radius: 16px;
+  color: var(--color-medium-text);
+  margin-right: 4px;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 11px;
+  box-shadow: 3px 1px 6px -4px black;
+}
+
+.table-container table tbody tr td a{
+  padding: 8px 16px;
+  background-color: var(--color-4);
+  border-radius: 16px;
+  text-decoration: none;
+  color: var(--color-medium-text);
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 14px;
+  box-shadow: 3px 1px 6px -4px black;
+}
+
+#new-user{
+  padding: 8px 16px;
+  background-color: var(--color-4);
+  border-radius: 16px;
+  text-decoration: none;
+  font-size: 14px;
+  color: var(--color-3);
+  font-weight: bold;
+  text-transform: uppercase;
+  box-shadow: 3px 1px 6px -4px black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  margin: 16px 30px;
+}
+
+/* ============ SEARCH ============ */
+
+.index-card-header {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  grid-template-areas: "blank search";
+  margin-top: 0;
+}
+
+.search-bar{
+  grid-area: search;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.search-bar button[type="submit"],
+.search-bar input{
+  margin: 0;
+}
+
+.search-bar input{
+  width: 100%;
+  box-sizing: border-box;
+  line-height: 24px;
+  border-radius: 8px;
+}
+
+.search-bar button[type="submit"]{
+  padding: 4px 16px;
+  font-size: 14px;
+}
+
+/* pagination */
+
+.table-container {
+  display: grid;
+  grid-template: 64px 1fr 16px / 1fr;
+}
+
+.table-container .header{
+  margin: 0;
+  align-self: start;
+}
+
+.table-container .pagination{
+  margin:0;
+  align-self: end;
+  justify-self: left;
+  margin-bottom: 4px;
+}
+
+.pagination a,
+.pagination span{
+  font-weight: bold;
+  color: var(--color-1);
+  text-decoration: none;
+  margin-right: 8px;
+}
+
+.pagination a:hover{
+  color: var(--color-5);
+  border-bottom: 1px solid var(--color-5);
+}

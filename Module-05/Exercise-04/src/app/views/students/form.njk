@@ -1,0 +1,126 @@
+<div class="item">
+  <div>Avatar Url: </div>
+  <div>
+    <input 
+      type="url" 
+      name="avatar_url" 
+      placeholder="http://"
+      value="{{student.avatar_url}}"
+    >
+  </div>
+</div>
+
+<div class="item">
+  <div>Name: </div>
+  <div>
+    <input 
+      type="text"
+      name="name"
+      value="{{student.name}}"
+    >
+  </div>
+</div>
+
+<div class="item">
+  <div>Email: </div>
+  <div>
+    <input 
+      type="text"
+      name="email"
+      value="{{student.email}}"
+    >
+  </div>
+</div>
+
+<div class="item">
+  <div>Birth Date: </div>
+  <div>
+    <input 
+      type="date"
+      name="birth"
+      value="{{student.birth}}"
+    >
+  </div>
+</div>
+
+<div class="item">
+  <div>Student Level: </div>
+  <div>
+    <select name="degree_lvl">
+      {% for degree in studentDegrees %}
+        <option value="{{degree}}" {% if student.degree == degree %} selected {%endif%}>
+          {{degree}}
+        </option>
+      {% endfor %}
+
+    </select>
+  </div>
+</div>
+
+<div class="item">
+  <div>Learning Preference: </div>
+  <div>
+
+    <span>
+      <input 
+        type="radio" 
+        name="place" 
+        value="Online" 
+        {% if (student.place != "both") and (student.place != "In Person") %} checked {% endif %}
+        > Online
+    </span>
+
+    <span>
+      <input 
+        type="radio" 
+        name="place" 
+        value="In Person" 
+        {% if student.place == "In Person" %} checked {% endif %}
+        > In Person
+    </span>
+
+    <span>
+      <input 
+        type="radio" 
+        name="place" 
+        value="both" {% if student.place == "both" %} checked {% endif %}
+        > Both
+    </span>
+
+  </div>
+</div>
+
+<div class="item">
+  <div>Weekly study load (hr): </div>
+  <div>
+    <input 
+      type="number"
+      name="load"
+      placeholder="Amount of study hours"
+      value="{{student.load}}"
+    >
+  </div>
+</div>
+
+<div class="item">
+  <div>Teacher: </div>
+  <div>
+    <select name="teacher_id">
+      {% for teacher in teachers_list %}
+        <option value="{{teacher.id}}" {% if student.teacher_id == teacher.id %} selected {%endif%}>
+          {{teacher.name}}
+        </option>
+      {% endfor %}
+
+    </select>
+  </div>
+</div>
+
+<script>
+const lvl_list = document.querySelectorAll('.item select[name="degree_lvl"] option');
+for (lvl of lvl_list){
+  if (lvl.getAttribute('value') == "{{student.degree_lvl}}"){
+    lvl.selected=true;
+  }
+}
+</script>
