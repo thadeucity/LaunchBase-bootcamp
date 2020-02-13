@@ -272,6 +272,7 @@ button[type="submit"].delete-btn{
 .table-container {
   padding: 16px;
   grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
 }
 
 .table-container table{
@@ -391,5 +392,38 @@ button[type="submit"].delete-btn{
   right: 0;
   bottom: 0;
   margin: 16px 30px;
+}
 
+/* ============ SEARCH ============ */
+
+.index-card-header {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  grid-template-areas: "blank search";
+  margin: 16px 0;
+}
+
+.search-bar{
+  grid-area: search;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.search-bar button[type="submit"],
+.search-bar input{
+  margin: 0;
+}
+
+.search-bar input{
+  width: 100%;
+  box-sizing: border-box;
+  line-height: 24px;
+  border-radius: 8px;
+}
+
+.search-bar button[type="submit"]{
+  padding: 4px 16px;
+  font-size: 14px;
 }

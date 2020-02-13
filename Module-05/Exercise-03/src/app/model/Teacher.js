@@ -63,6 +63,23 @@ module.exports = {
 
   },
 
+  findBy(filter, callback){
+    const query = `
+      SELECT teachers.*, count(students) AS total_students 
+      FROM teachers
+      LEFT JOIN students ON (teachers.id = students.teacher_id)
+      WHERE teachers.name ILIKE '%${filter}%'
+      OR teachers.teaching_area ILIKE '%${filter}%'
+      GROUP BY teachers.id
+      ORDER BY name ASC
+    `;
+
+    db.query(query, function(err, results){
+      if (err) throw `Database Error! ${err}`;
+      callback(results.rows);
+    }); 
+  },
+
   update(data, callback){
     const query = `
       UPDATE teachers SET
