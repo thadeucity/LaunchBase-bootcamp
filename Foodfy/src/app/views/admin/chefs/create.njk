@@ -1,0 +1,17 @@
+{% extends "admin_layout.njk" %}
+
+{% block content %}
+
+<form class="admin-form" action="/admin/chefs" method="POST">
+
+  <div class="admin-top-bar">
+        <h1>Register Chef</h1>
+        <button type="submit">Save chef</button>
+  </div>
+
+  {% include 'admin/chefs/fields.njk'%}
+
+</form>
+
+
+{% endblock %}

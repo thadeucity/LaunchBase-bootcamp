@@ -1,0 +1,420 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900&display=swap');
+
+:root {
+  --color-darkest: #111111;
+  --color-dark-grey: #444444;
+  --color-grey: #777777;
+  --colot-grey2: #999999;
+  --color-light-grey: #DDDDDD;
+  --color-lighter-grey: #EEEEEE;
+
+  --color-primary: #6558C3;
+  --color-banner: #FBDFDB;
+}
+
+*{
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+html{
+  height: 100%;
+  font-family: 'Roboto', sans-serif;
+  color: var(--color-darkest);
+}
+
+body{
+  display: grid;
+  height: 100%;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 62px;
+}
+
+#wrapper{
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+/* ========================= HEADER ========================= */
+
+header {
+  margin: 32px auto;
+  display: grid;
+  grid-template-columns: auto 1fr 350px;
+  align-items: center;
+}
+
+header nav{
+  padding-left: 120px;
+}
+
+header nav a{
+  text-decoration: none;
+  color: var(--color-darkest);
+  font-size: 16px;
+  margin-right: 32px;
+}
+
+header nav a.active{
+  font-weight: bold;
+}
+
+header form{
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+}
+
+header form input{
+  font-size: 14px;
+  line-height: 37px;
+  border: solid 1px var(--color-light-grey);
+  border-radius: 4px;
+  padding-left: 16px;
+}
+
+header form button,
+.admin-top-bar button,
+.admin-top-bar a{
+  text-decoration: none;
+  font-weight: bold;
+  color:white;
+  font-size: 16px;
+  padding: 8px 20px;
+  background-color: var(--color-primary);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* ========================= INDEX ========================= */
+
+/* ------- Banner ------- */
+
+#index-banner{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background-color: var(--color-banner);
+  border-radius: 30px;
+  height: 365px;
+  margin-bottom: 60px;
+}
+
+#index-banner .info{
+  align-self: center;
+  padding: 0 60px;
+}
+
+#index-banner .image{
+  align-self: end;
+  justify-self: center;
+}
+
+/* ------- Body ------- */
+
+h2.section-title{
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 28px;
+}
+
+/* ========================= RECIPE GRID ========================= */
+
+.recipe-grid{
+  width: 100%;
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 30px 20px;
+}
+
+.card{
+  font-size: 18px;
+  line-height: 21px;
+}
+
+.img-container{
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.card .img-container{
+  padding-top: 47%;
+  border-radius: 15px;
+  margin-bottom: 20px;
+}
+
+.img-container .card-image{
+  background-position: center;
+  background-size: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.card-info p.author{
+  color: var(--color-grey);
+  font-size: 14px;
+  line-height: 16px;
+}
+
+/* ============================ ABOUT ============================ */
+
+#about h1{
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+#about p{
+  font-size: 18px;
+  line-height: 28px;
+  margin-bottom: 30px;
+}
+
+#about h2{
+  font-size: 20px;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+/* ======================== FULL  RECIPE ========================= */
+
+.full-recipe{
+  padding-top: 20px;
+  margin-bottom: 50px;
+  font-size: 18px;
+  line-height: 28px;
+}
+
+.full-recipe .img-container{
+  padding-top: 30%;
+  border-radius: 15px;
+  margin-bottom: 50px;
+}
+
+.recipe-info h1{
+  text-align: center;
+  font-size: 36px;
+  line-height: 42px;
+  font-weight: bold;
+}
+
+.recipe-info .author{
+  text-align: center;
+  font-size: 20px;
+  line-height: 24px;
+  color: var(--color-grey);
+}
+
+.recipe-info h2{
+  font-size: 24px;
+  line-height: 28px;
+  font-weight: bold;
+}
+
+.recipe-section{
+  margin-top: 50px;
+}
+
+.recipe-section-head{
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: flex-end;
+  margin-bottom: 20px;
+}
+
+.recipe-section-head .toggle{
+  font-size: 12px;
+  line-height: 14px;
+  padding-left: 10px;
+  padding-bottom: 3px;
+  cursor: pointer;
+}
+
+.recipe-info ul{
+  margin-left: 1em;
+  color: var(--color-dark-grey);
+}
+
+.recipe-section-info {
+  display: none;
+}
+
+.recipe-section-info.active{
+  display: inline;
+}
+
+/* ======================== ADMIN HEADER ========================= */
+
+#black-bar{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  background-color: var(--color-darkest);
+  z-index: -2;
+}
+
+header.admin{
+  height: 80px;
+  margin: 0;
+  margin-bottom: 50px;
+}
+
+header.admin nav a{
+  font-weight: bold;
+  color: var(--colot-grey2);
+}
+
+header.admin nav a.active{
+  color: white;
+}
+
+header.admin img{
+  filter: invert(1);
+}
+
+/* ======================== ADMIN GENERAL ======================== */
+
+.admin-top-bar{
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.admin-top-bar h1{
+  font-size: 24px;
+}
+
+/* ======================== ADMIN Recipes ======================== */
+
+.recipe-grid.admin{
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 40px;
+}
+
+.card.admin{
+  display: grid;
+  grid-template-columns: 7fr 10fr;
+  gap: 20px
+}
+
+.card.admin .img-container{
+  border-radius: 8px;
+  padding-bottom: 0;
+}
+
+.card-info.admin p.author{
+  margin-top: 8px;
+}
+
+.card-info.admin a,
+.admin-form .item a{
+  text-decoration: none;
+  display: block;
+  margin-top: 8px;
+  color: var(--color-primary);
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: bold;
+}
+
+/* ============================ CHEFS ============================ */
+
+.chefs-grid{
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 0 20px;
+}
+
+.chefs-grid .card{
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 20px;
+}
+
+.chefs-grid .card .img-container{
+  border: 0;
+  border-radius: 50%;
+  padding-top: 100%;
+}
+
+.chefs-grid .card-info{
+  align-self: center;
+  margin-top: -20px;
+}
+
+
+
+/* ========================= ADMIN FORMS ========================= */
+
+.admin-form{
+  width: 100%;
+  margin-bottom: 50px;
+}
+
+.admin-form .item {
+  margin-bottom: 30px;
+}
+
+.admin-form input,
+.admin-form textarea{
+  width: 100%;
+  border: 1px solid var(--color-light-grey);
+  border-radius: 4px;
+  height: 49px;
+  line-height: 20px;
+  font-size: 16px;
+  padding-left: 16px;
+  box-sizing: border-box;
+}
+
+.admin-form textarea{
+  resize: none;
+  height: 258px;
+}
+
+.admin-form .item div:nth-child(1){
+  font-size: 16px;
+  line-height: 19px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.admin-form .item div:nth-child(2){
+  color: var(--color-dark-grey);
+}
+
+.admin-form .item a {
+  display: inline-block;
+  width: 10em;
+  margin-right: 16px;
+}
+
+.admin-form .item .ingredient,
+.admin-form .item .step {
+  margin-bottom: 10px;
+}
+
+/* =========================== FOOTER ============================ */
+
+footer{
+  height: 100%;
+  background-color: var(--color-lighter-grey);
+  text-align: center;
+  color: var(--colot-grey2);
+  font-size: 14px;
+  line-height: 62px;
+}
