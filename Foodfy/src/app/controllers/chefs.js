@@ -2,7 +2,16 @@ const Chef = require('../model/Chef');
 
 module.exports = {
   adminChefs (req, res){
-    return res.render('admin/chefs/index');
+    Chef.all(function(chefs){
+      return res.render('admin/chefs/index', {chefs});
+    });
+  },
+  adminShow (req, res){
+    const {id} = req.params;
+
+    Chef.find( id, function(chef){
+      return res.render('admin/chefs/show', {chef});
+    });
   },
   create (req, res){
     return res.render('admin/chefs/create');

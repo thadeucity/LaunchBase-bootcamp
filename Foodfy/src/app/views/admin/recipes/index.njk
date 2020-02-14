@@ -9,49 +9,18 @@
 
 <div class="recipe-grid admin">
 
-  <div class="card admin" id="Receita 1">
-    <div class="img-container">
-      <div class="card-image" style="background-image: url(https://images-gmi-pmc.edge-generalmills.com/b194a6a7-da60-4ad4-bc86-6e697db2fcf2.jpg)"></div>
+  {% for recipe in recipes %}
+    <div class="card admin" id="{{recipe.id}}">
+      <div class="img-container">
+        <div class="card-image" style="background-image: url({{recipe.image}})"></div>
+      </div>
+      <div class="card-info admin">
+        <p>{{recipe.title}}</p>
+        <p class="author admin">by {{recipe.chef_name}}</p>
+        <a href="/admin/recipes/{{recipe.id}}">View</a>
+      </div>
     </div>
-    <div class="card-info admin">
-      <p>Teste de Espagueti</p>
-      <p class="author admin">by Victor Alvarenga</p>
-      <a href="#">View</a>
-    </div>
-  </div>
-
-  <div class="card admin" id="Receita 1">
-    <div class="img-container">
-      <div class="card-image" style="background-image: url(https://images-gmi-pmc.edge-generalmills.com/b194a6a7-da60-4ad4-bc86-6e697db2fcf2.jpg)"></div>
-    </div>
-    <div class="card-info admin">
-      <p>Teste de Espagueti</p>
-      <p class="author">by Victor Alvarenga</p>
-      <a href="#">View</a>
-    </div>
-  </div>
-
-  <div class="card admin" id="Receita 1">
-    <div class="img-container">
-      <div class="card-image" style="background-image: url(https://images-gmi-pmc.edge-generalmills.com/b194a6a7-da60-4ad4-bc86-6e697db2fcf2.jpg)"></div>
-    </div>
-    <div class="card-info admin">
-      <p>Teste de Espagueti</p>
-      <p class="author">by Victor Alvarenga</p>
-      <a href="#">View</a>
-    </div>
-  </div>
-
-    <div class="card admin" id="Receita 1">
-    <div class="img-container">
-      <div class="card-image" style="background-image: url(https://images-gmi-pmc.edge-generalmills.com/b194a6a7-da60-4ad4-bc86-6e697db2fcf2.jpg)"></div>
-    </div>
-    <div class="card-info admin">
-      <p>Teste de Espagueti</p>
-      <p class="author">by Victor Alvarenga</p>
-      <a href="#">View</a>
-    </div>
-  </div>
+  {% endfor %}
 
 </div>
 

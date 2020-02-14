@@ -22,8 +22,11 @@ routes.get('/chefs', recipes.show);  ///////// CHANGE
 routes.get('/admin', recipes.adminIndex);
 routes.get('/admin/recipes', recipes.adminRecipes);
 routes.get('/admin/recipes/create', recipes.create);
+routes.get('/admin/recipes/:id', recipes.adminShow);
+routes.get('/admin/recipes/:id/edit', recipes.edit);
 
 routes.get('/admin/chefs', chefs.adminChefs);
+routes.get('/admin/chefs/:id', chefs.adminShow);
 routes.get('/admin/chefs/create', chefs.create);
 
 routes.post('/admin/recipes', recipes.post);

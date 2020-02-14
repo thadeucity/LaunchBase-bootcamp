@@ -23,6 +23,24 @@ module.exports = {
   create (req, res){
     return res.render('admin/recipes/create');
   },
+  adminShow (req, res){
+    const {id} = req.params;
+
+    Recipe.find(id, function(recipe){
+      return res.render('admin/recipes/show', {recipe});
+    });  
+  },
+  edit (req, res){
+    const {id} = req.params;
+
+    Recipe.chefsList(function(chefs){
+
+      Recipe.find(id, function(recipe){
+        return res.render('admin/recipes/edit', {recipe, chefs});
+      }); 
+
+    }); 
+  },
   post (req, res){
     const keys = Object.keys(req.body);
     for (key of keys){
@@ -37,12 +55,12 @@ module.exports = {
   },
 
   adminIndex (req, res){
-
-
     return res.redirect('/admin/recipes')
   },
   adminRecipes (req, res){
-    return res.render('admin/recipes/index');
+    Recipe.all(function(recipes){
+      return res.render('admin/recipes/index', {recipes});
+    });
   }
 
 }

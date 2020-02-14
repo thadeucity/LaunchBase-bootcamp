@@ -2,6 +2,19 @@ const db = require('../../config/db');
 const { date } = require('../../lib/utils');
 
 module.exports = {
+  all(callback){
+    const QUERY = `
+      SELECT *
+      FROM chefs
+      ORDER BY name
+    `;
+
+    db.query(QUERY, function(err, results){
+      if (err) throw `Database Error! ${err}`;
+
+      callback(results.rows);
+    });
+  },
   create(data,callback){
     const QUERY = `
       INSERT INTO chefs (
@@ -28,17 +41,16 @@ module.exports = {
   find(id, callback){
     const QUERY = `
       SELECT *
-      FROM recipes
+      FROM chefs
       WHERE id = $1
     `;
-
     db.query(QUERY, [id], function(err, results){
       if (err) throw `Database Error! ${err}`;
 
       callback(results.rows[0]);
     });
   },
-  mostViewed(limit,callback){
+  mostViewed(limit,callback){ // CHANGE
     const QUERY = `
       SELECT *
       FROM recipes

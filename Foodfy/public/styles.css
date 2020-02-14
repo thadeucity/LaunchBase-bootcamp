@@ -78,6 +78,7 @@ header form input{
 }
 
 header form button,
+.admin-delete-form button,
 .admin-top-bar button,
 .admin-top-bar a{
   text-decoration: none;
@@ -186,7 +187,8 @@ h2.section-title{
 
 /* ======================== FULL  RECIPE ========================= */
 
-.full-recipe{
+.full-recipe,
+.full-chef{
   padding-top: 20px;
   margin-bottom: 50px;
   font-size: 18px;
@@ -199,21 +201,24 @@ h2.section-title{
   margin-bottom: 50px;
 }
 
-.recipe-info h1{
+.recipe-info h1,
+.chef-info h1{
   text-align: center;
   font-size: 36px;
   line-height: 42px;
   font-weight: bold;
 }
 
-.recipe-info .author{
+.recipe-info .author,
+.chef-info .total-recipes{
   text-align: center;
   font-size: 20px;
   line-height: 24px;
   color: var(--color-grey);
 }
 
-.recipe-info h2{
+.recipe-info h2,
+.full-chef h2{
   font-size: 24px;
   line-height: 28px;
   font-weight: bold;
@@ -356,6 +361,20 @@ header.admin img{
   margin-top: -20px;
 }
 
+.full-chef .img-container.chef{
+  width: 200px;
+  margin: 0 auto;
+  padding-top: 200px;
+  border-radius: 50%;
+  margin-bottom: 50px;
+}
+
+.chef-info{
+  margin-bottom: 50px;
+}
+
+
+
 
 
 /* ========================= ADMIN FORMS ========================= */
@@ -370,7 +389,8 @@ header.admin img{
 }
 
 .admin-form input,
-.admin-form textarea{
+.admin-form textarea,
+.admin-form select{
   width: 100%;
   border: 1px solid var(--color-light-grey);
   border-radius: 4px;
@@ -379,6 +399,18 @@ header.admin img{
   font-size: 16px;
   padding-left: 16px;
   box-sizing: border-box;
+}
+
+.admin-form select::-ms-expand {
+  display: none;
+}
+
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  text-indent: 1px;
+  text-overflow: '';
+  background: url(/img/arrow_drop_menu.svg) 99% / 4% no-repeat;
 }
 
 .admin-form textarea{
@@ -406,6 +438,25 @@ header.admin img{
 .admin-form .item .ingredient,
 .admin-form .item .step {
   margin-bottom: 10px;
+}
+
+.delete-container{
+  position: relative;
+  width: 100%;
+}
+
+.admin-delete-form{
+  position: absolute;
+  left: 0;
+  right: 140px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: "blank delete";
+}
+
+.admin-delete-form button{
+  background-color: #DC4747;
+  grid-area: delete;
 }
 
 /* =========================== FOOTER ============================ */

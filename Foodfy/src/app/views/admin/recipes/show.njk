@@ -1,0 +1,60 @@
+{% extends "admin_layout.njk" %}
+
+{% block content %}
+
+<div class="full-recipe">
+
+  <div class="admin-top-bar">
+    <h1>Recipe: {{recipe.title}}</h1>
+    <a href="/admin/recipes/{{recipe.id}}/edit">Edit Recipe</a>
+  </div>
+
+  <div class="img-container">
+      <div class="card-image" style="background-image: url({{recipe.image}})"></div>
+  </div>
+
+  <div class="recipe-info">
+    <h1>{{recipe.title}}</h1>
+    <p class="author">by Jorge Relato</p>
+
+    <div class="recipe-section">
+      <div class="recipe-section-head">
+        <h2>Ingredients</h2>
+        <p class="toggle">hide</p>
+      </div>
+      <div class="recipe-section-info active">
+        <ul>
+          {% for ingredient in recipe.ingredients %}
+            <li>{{ingredient}}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <div class="recipe-section">
+      <div class="recipe-section-head">
+        <h2>How to make it</h2>
+        <p class="toggle">hide</p>
+      </div>
+      <div class="recipe-section-info active">
+        <ul>
+          {% for step in recipe.preparation %}
+            <li>{{step}}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <div class="recipe-section">
+      <div class="recipe-section-head">
+        <h2>Aditional Info</h2>
+        <p class="toggle">hide</p>
+      </div>
+      <div class="recipe-section-info active">
+        <p>{{recipe.information}}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

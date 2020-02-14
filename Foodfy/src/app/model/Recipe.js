@@ -46,14 +46,42 @@ module.exports = {
       callback(results.rows[0]);
     });
   },
+  all(callback){
+    const QUERY = `
+      SELECT recipes.*, chefs.name as chef_name 
+      from recipes
+      LEFT JOIN chefs ON (recipes.chef_id = chefs.id)
+      ORDER BY name
+    `;
+
+  db.query(QUERY, function(err, results){
+    if (err) throw `Database Error! ${err}`;
+    callback(results.rows);
+  });
+  },
   mostViewed(limit,callback){
     const QUERY = `
-      SELECT *
-      FROM recipes
+      SELECT recipes.*, chefs.name as chef_name 
+      from recipes
+      LEFT JOIN chefs ON (recipes.chef_id = chefs.id)
+      ORDER BY name
       LIMIT $1
     `;
 
     db.query(QUERY, [limit], function(err, results){
+      if (err) throw `Database Error! ${err}`;
+
+      callback(results.rows);
+    });
+  },
+  chefsList(callback){
+    const QUERY = `
+      SELECT name, id
+      from chefs
+      ORDER BY name
+    `;
+
+    db.query(QUERY, function(err, results){
       if (err) throw `Database Error! ${err}`;
 
       callback(results.rows);

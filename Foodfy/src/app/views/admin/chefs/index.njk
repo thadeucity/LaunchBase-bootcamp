@@ -8,46 +8,17 @@
 </div>
 
 <div class="chefs-grid admin">
-
-  <div class="card admin" id="Receita 1">
-    <div class="img-container">
-      <div class="card-image" style="background-image: url(https://images-gmi-pmc.edge-generalmills.com/b194a6a7-da60-4ad4-bc86-6e697db2fcf2.jpg)"></div>
+  {% for chef in chefs %}
+    <div class="card admin" id="{{chef.id}}">
+      <div class="img-container">
+        <div class="card-image" style="background-image: url({{chef.avatar_url}})"></div>
+      </div>
+      <div class="card-info admin">
+        <p>{{chef.name}}</p>
+        <a href="/admin/chefs/{{chef.id}}">View</a>
+      </div>
     </div>
-    <div class="card-info admin">
-      <p>Jorge Relato</p>
-      <a href="#">View</a>
-    </div>
-  </div>
-
-  <div class="card admin" id="Receita 1">
-    <div class="img-container">
-      <div class="card-image" style="background-image: url(https://images-gmi-pmc.edge-generalmills.com/b194a6a7-da60-4ad4-bc86-6e697db2fcf2.jpg)"></div>
-    </div>
-    <div class="card-info admin">
-      <p>Fabiana Melo</p>
-      <a href="#">View</a>
-    </div>
-  </div>
-
-  <div class="card admin" id="Receita 1">
-    <div class="img-container">
-      <div class="card-image" style="background-image: url(https://images-gmi-pmc.edge-generalmills.com/b194a6a7-da60-4ad4-bc86-6e697db2fcf2.jpg)"></div>
-    </div>
-    <div class="card-info admin">
-      <p>Vania Steroski</p>
-      <a href="#">View</a>
-    </div>
-  </div>
-
-  <div class="card admin" id="Receita 1">
-    <div class="img-container">
-      <div class="card-image" style="background-image: url(https://images-gmi-pmc.edge-generalmills.com/b194a6a7-da60-4ad4-bc86-6e697db2fcf2.jpg)"></div>
-    </div>
-    <div class="card-info admin">
-      <p>Juliano Vieira</p>
-      <a href="#">View</a>
-    </div>
-  </div>
+  {% endfor %}
 
 </div>
 
