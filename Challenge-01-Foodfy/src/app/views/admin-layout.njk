@@ -12,14 +12,22 @@
   <body id="admin">
 
     <header id="admin-header">
-      <div>  
-        <a href="/admin"><img src="/img/logo.png" alt="Foodfy Logo"></a>
+      <div class="header-content">
+        <div>  
+          <a href="/admin"><img src="/img/logo.png" alt="Foodfy Logo"></a>
+        </div>
+        <nav>
+            <a href="/admin/recipes">Recipes</a>
+            <a href="/admin/chefs">Chefs</a>
+        </nav>
       </div>
     </header>
 
     <div id="wrapper">      
       {% block content %} {% endblock%}
     </div>
+
+    <script src="/page_checker.js"></script>
 
   </body>
 </html>

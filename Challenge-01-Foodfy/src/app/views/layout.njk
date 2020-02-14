@@ -16,7 +16,17 @@
         <nav>
           <a href="/about">About</a>
           <a href="/recipes">Recipes</a>
+          <a href="/chefs">Chefs</a>
         </nav>
+        <form action="/recipes" method="GET">
+          <input 
+            type="text"
+            name="filter"
+            placeholder="Search a recipe"
+            value={{filter}}
+          >
+          <button type="submit">Filtrar</button>
+        </form>
       </header>
       
       {% block content %} {% endblock%}

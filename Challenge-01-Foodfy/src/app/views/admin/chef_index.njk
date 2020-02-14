@@ -1,0 +1,22 @@
+{% extends "admin-layout.njk" %}
+
+{% block content %}
+
+<main>
+  <h1 class="admin-title">Manage Chefs</h1>
+  <div class="admin-chef-list">
+
+      <div class="card">
+        <img src="{{chef.avatar_url}}" alt="image {{chef.name}}">
+        <div class="card-info">
+          <p>{{chef.name}}</p>
+          <a href="/admin/chefs/{{chef.id}}">View</a>
+        </div>
+      </div>
+
+  </div>
+</main>
+
+<script src="/scripts.js"></script>
+
+{% endblock %}
