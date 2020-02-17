@@ -34,6 +34,8 @@ body{
 #wrapper{
   width: 100%;
   max-width: 980px;
+  display: grid;
+  grid-template-rows: auto 1fr;
   margin: 0 auto;
   padding: 0 20px;
   box-sizing: border-box;
@@ -123,8 +125,29 @@ h2.section-title{
 }
 
 /* ========================= RECIPE GRID ========================= */
+main{
+  display: flex;
+  flex-direction: column
+}
+
+.recipes-content {
+  flex: 1;
+  width: 100%;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas: 
+    "recipe-grid"
+    "blank"
+    "pagination";
+}
 
 .recipe-grid{
+  grid-area: recipe-grid;
   width: 100%;
   margin-top: 20px;
   display: grid;
@@ -135,6 +158,7 @@ h2.section-title{
 .card{
   font-size: 18px;
   line-height: 21px;
+  cursor: pointer;
 }
 
 .img-container{
@@ -164,6 +188,27 @@ h2.section-title{
   font-size: 14px;
   line-height: 16px;
 }
+
+.pagination{
+  grid-area: pagination;
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.pagination a,
+.pagination span{
+  text-decoration: none;
+  font-size: 16px;
+  color: var(--color-grey);
+  margin-right: 16px;
+}
+
+.pagination a.active{
+  font-weight: bold;
+  color: var(--color-darkest);
+}
+
+
 
 /* ============================ ABOUT ============================ */
 
@@ -312,7 +357,8 @@ header.admin img{
 .card.admin{
   display: grid;
   grid-template-columns: 7fr 10fr;
-  gap: 20px
+  gap: 20px;
+  cursor: initial;
 }
 
 .card.admin .img-container{

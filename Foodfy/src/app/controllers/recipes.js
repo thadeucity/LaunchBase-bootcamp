@@ -9,7 +9,28 @@ module.exports = {
     });
   },
   recipes (req, res){
-    return res.render('public/recipes');
+    let { filter, page, limit } = req.query;
+
+    page = page || 1;
+    limit = limit || 4;
+    let offset = limit * (page-1);
+
+    const params = {
+      limit,
+      offset,
+      filter
+    }
+
+    Recipe.paginate(params, function(recipes){
+      let pagination = {
+        total: 0,
+        page
+      }
+      if (recipes[0]){
+        pagination.total = Math.ceil(recipes[0].total/limit);
+      }  
+      return res.render('public/recipes', {recipes, pagination, filter});
+    });
   },
   show (req, res){
     const {id} = req.params;
@@ -21,7 +42,9 @@ module.exports = {
   },
 
   create (req, res){
-    return res.render('admin/recipes/create');
+    Recipe.chefsList(function(chefs){
+      return res.render('admin/recipes/create', {chefs});
+    });
   },
   adminShow (req, res){
     const {id} = req.params;
@@ -51,6 +74,18 @@ module.exports = {
 
     Recipe.create(req.body, function(recipe){
       return res.render('admin/recipes/index');
+    });
+  },
+  put (req,res){
+    const keys = Object.keys(req.body);
+    for (key of keys){
+      if(req.body[key] == ""){
+        return res.send('Please, fill all fields');
+      }
+    }
+
+    Recipe.update(req.body, function(recipe){
+      return res.redirect(`/admin/recipes/${recipe.id}`);
     });
   },
 

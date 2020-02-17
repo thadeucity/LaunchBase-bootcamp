@@ -2,48 +2,38 @@
 
 {% block content %}
 
-<div class="recipe-grid">
+{% if filter %} 
 
-  <div class="card" id="Receita 1">
-    <div class="img-container">
-      <div class="card-image" style="background-image: url(https://images-gmi-pmc.edge-generalmills.com/b194a6a7-da60-4ad4-bc86-6e697db2fcf2.jpg)"></div>
-    </div>
-    <div class="card-info">
-      <p>Teste de Espagueti</p>
-      <p class="author">by Victor Alvarenga</p>
-    </div>
+Searching for "{{filter}}"
+
+{% endif %}
+
+<div class="recipes-content">
+
+  <div class="recipe-grid">
+
+    {% for recipe in recipes %}
+      <div class="card" id="{{recipe.id}}">
+        <div class="img-container">
+          <div class="card-image" style="background-image: url({{recipe.image}})"></div>
+        </div>
+        <div class="card-info">
+          <p>{{recipe.title}}</p>
+          <p class="author">by {{recipe.chef_name}}</p>
+        </div>
+      </div>
+    {% endfor %}
+
   </div>
 
-  <div class="card" id="Receita 1">
-    <div class="img-container">
-      <div class="card-image" style="background-image: url(https://images-gmi-pmc.edge-generalmills.com/b194a6a7-da60-4ad4-bc86-6e697db2fcf2.jpg)"></div>
-    </div>
-    <div class="card-info">
-      <p>Teste de Espagueti</p>
-      <p class="author">by Victor Alvarenga</p>
-    </div>
-  </div>
-
-  <div class="card" id="Receita 1">
-    <div class="img-container">
-      <div class="card-image" style="background-image: url(https://images-gmi-pmc.edge-generalmills.com/b194a6a7-da60-4ad4-bc86-6e697db2fcf2.jpg)"></div>
-    </div>
-    <div class="card-info">
-      <p>Teste de Espagueti</p>
-      <p class="author">by Victor Alvarenga</p>
-    </div>
-  </div>
-
-    <div class="card" id="Receita 1">
-    <div class="img-container">
-      <div class="card-image" style="background-image: url(https://images-gmi-pmc.edge-generalmills.com/b194a6a7-da60-4ad4-bc86-6e697db2fcf2.jpg)"></div>
-    </div>
-    <div class="card-info">
-      <p>Teste de Espagueti</p>
-      <p class="author">by Victor Alvarenga</p>
-    </div>
-  </div>
+  <div
+    class="pagination"
+    data-page={{pagination.page}}
+    data-total={{pagination.total}}
+    data-filter={{filter}}
+  ></div>
 
 </div>
+
 
 {% endblock %}

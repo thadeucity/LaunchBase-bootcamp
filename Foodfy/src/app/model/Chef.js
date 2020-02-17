@@ -4,9 +4,16 @@ const { date } = require('../../lib/utils');
 module.exports = {
   all(callback){
     const QUERY = `
-      SELECT *
-      FROM chefs
-      ORDER BY name
+      SELECT 
+        chefs.*, count(recipes) AS total_recipes 
+      FROM 
+        chefs
+      LEFT JOIN
+        recipes ON (chefs.id = recipes.chef_id)
+      GROUP BY
+        chefs.id
+      ORDER 
+        BY name
     `;
 
     db.query(QUERY, function(err, results){
@@ -33,16 +40,42 @@ module.exports = {
 
     db.query(QUERY, VALUES, function(err, results){
       if (err) throw `Database Error! ${err}`;
-
       callback(results.rows[0]);
     });
 
   },
+  update(data,callback){
+    const QUERY = `
+      UPDATE chefs SET
+        name=($1),
+        avatar_url=($2)
+      WHERE id = $3
+      RETURNING id
+    `;
+
+    const VALUES = [
+      data.name,
+      data.avatar_url, 
+      data.id
+    ];
+
+    db.query(QUERY, VALUES, function(err, results){
+      if (err) throw `Database Error! ${err}`;
+      callback(results.rows[0]);
+    });
+  },
   find(id, callback){
     const QUERY = `
-      SELECT *
-      FROM chefs
-      WHERE id = $1
+      SELECT
+        chefs.*, count(recipes) AS total_recipes
+      FROM 
+        chefs
+      LEFT JOIN
+        recipes ON (chefs.id = recipes.chef_id)
+      WHERE
+        chefs.id = $1
+      GROUP BY
+        chefs.id
     `;
     db.query(QUERY, [id], function(err, results){
       if (err) throw `Database Error! ${err}`;
@@ -50,14 +83,10 @@ module.exports = {
       callback(results.rows[0]);
     });
   },
-  mostViewed(limit,callback){ // CHANGE
-    const QUERY = `
-      SELECT *
-      FROM recipes
-      LIMIT $1
-    `;
+  findRecipes(id, callback){
+    const QUERY = `SELECT * FROM recipes WHERE chef_id = $1`;
 
-    db.query(QUERY, [limit], function(err, results){
+    db.query(QUERY, [id], function(err, results){
       if (err) throw `Database Error! ${err}`;
 
       callback(results.rows);

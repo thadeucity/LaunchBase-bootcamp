@@ -1,0 +1,22 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+
+<div class="chefs-grid">
+  {% for chef in chefs %}
+    <div class="card chefs" id="{{chef.id}}">
+      <div class="img-container">
+        <div class="card-image" style="background-image: url({{chef.avatar_url}})"></div>
+      </div>
+      <div class="card-info">
+        <p>{{chef.name}}</p>
+        <p class="author">{{chef.total_recipes}}
+        {% if chef.total_recipes == 1 %} recipe {% else %} recipes {% endif %}
+        </p>
+      </div>
+    </div>
+  {% endfor %}
+
+</div>
+
+{% endblock %}
