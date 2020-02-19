@@ -1,0 +1,32 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+
+<div id="wrapper">
+
+  <section id="cards">
+
+
+    {% for course in coursesList %}
+    <div class="card" id="{{course.name}}">
+      <i class="material-icons">filter_{{course.index}}</i>
+      <div class="card-image-container">
+        <img src=".\img\{{course.name}}.svg" alt="{{course.name}} logo">
+      </div>
+      <div class="card-content">
+        <p>
+          {{course.text}}
+        </p>
+      </div>
+      <div class="card-info">
+        <p> {{course.modules}} módulos</p>
+        <p class="card-price">{{course.price}}</p>
+      </div>
+    </div>
+    {% endfor %}
+
+  </section>
+
+</div>
+
+{% endblock %}
