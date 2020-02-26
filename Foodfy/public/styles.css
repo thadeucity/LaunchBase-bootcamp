@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
 :root {
   --color-darkest: #111111;
@@ -44,6 +45,7 @@ body{
 /* ========================= HEADER ========================= */
 
 header {
+  width:100%;
   margin: 32px auto;
   display: grid;
   grid-template-columns: auto 1fr 350px;
@@ -174,13 +176,43 @@ main{
 }
 
 .img-container .card-image{
-  background-position: center;
-  background-size: cover;
   position: absolute;
+  display: flex;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+}
+
+.img-container .card-image img{
+  width: 100%;
+  object-fit: cover;
+}
+
+.mini-gallery{
+  margin: -42px 0 0 0;
+  width: 100%;
+  height: 50px;
+  display: grid;
+  grid-auto-flow: column;
+  justify-content: end;
+  grid-gap: 10px;
+}
+
+.mini-gallery img{
+  opacity: 0.5;
+  height: 50px;
+  width: 50px;
+  border-radius: 4px;
+  object-fit: cover;
+  box-sizing: border-box;
+  cursor: zoom-in;
+  transition: 200ms;
+}
+
+.mini-gallery img:hover,
+.mini-gallery img.active{
+  opacity: 1;
 }
 
 .card-info p.author{
@@ -503,6 +535,129 @@ select {
 .admin-delete-form button{
   background-color: #DC4747;
   grid-area: delete;
+}
+
+/* ======================== IMAGE UPLOAD ========================= */
+
+form .upload-grid{
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  height: 150px;
+  grid-gap: 10px;
+}
+
+form .upload-grid .img-upload{
+  border: 1px solid var(--color-light-grey);
+  border-radius: 3.5px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 !important;
+}
+
+form .upload-grid .img-upload input{
+  cursor: pointer;
+  border: 0;
+}
+
+form .upload-grid .img-upload .material-icons,
+form .avatar-upload .material-icons{
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  font-size: 32px;
+  color: var(--colot-grey2);
+  display: block;
+  overflow: hidden;
+}
+
+form .item #img-input{
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  opacity: 0;
+  padding: 0px;
+}
+
+.photo{
+  width: 100%;
+  overflow: hidden;
+  height: 150px;
+  border-radius: 3.5px;
+  position: relative;
+}
+
+.photo img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo i {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(255,255,255,0.85);
+
+  color: red;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 38px;
+  cursor: pointer;
+
+  transition: opacity 200ms;
+
+  opacity: 0;
+  
+}
+
+.photo:hover i {
+  opacity: 1;
+}
+
+/* ======================== AVATAR UPLOAD ========================= */
+
+form .avatar-upload{
+  margin-top: 22px;
+  position: relative;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 1px solid var(--color-light-grey);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+  transition: filter 0.3s ease-in-out;
+}
+
+form .avatar-upload.active:hover{
+  filter: grayscale(1) brightness(75%);
+  filter:;
+}
+
+form .avatar-upload .material-icons.active{
+  opacity: 0;
+  color: white;
+  transition: opacity  0.3s ease-in-out ;
+  font-size: 40px;
+}
+
+form .avatar-upload:hover .material-icons.active{
+  opacity: 1;
 }
 
 /* =========================== FOOTER ============================ */

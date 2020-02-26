@@ -5,7 +5,9 @@
 <div class="full-chef">
 
     <div class="img-container chef">
-        <div class="card-image" style="background-image: url({{chef.avatar_url}})"></div>
+        <div class="card-image">
+          <img src="{{chef.avatar}}" alt="{{chef.name}} - avatar photo">
+        </div>
     </div>
 
     <div class="chef-info">
@@ -24,7 +26,9 @@
 
         <div class="card" id="{{recipe.id}}">
           <div class="img-container">
-            <div class="card-image" style="background-image: url({{recipe.image}})"></div>
+            <div class="card-image">
+              <div class="card-image"><img src="{{recipe.cardImage}}" alt="{{recipe.title}} - thumbnail"></div>
+            </div>
           </div>
           <div class="card-info">
             <p>{{recipe.title}}</p>

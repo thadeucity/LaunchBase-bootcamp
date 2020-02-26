@@ -8,8 +8,6 @@ const cards = document.querySelectorAll('.card');
 const urlParams = new URLSearchParams(window.location.search);
 const myParam = urlParams.get('page');
 
-console.log(myParam)
-
 const pagination = document.querySelector('.pagination');
 
 for (item of menuItens) {
@@ -151,6 +149,151 @@ function clickCard(){
   }
 }
 
+
+const ImgUpload = {
+  input: '',
+  files: [],
+  uploadLimit:5,
+  preview: document.querySelector('.upload-grid'),
+  handleFileInput(e){
+    const {files: fileList} = e.target;
+    ImgUpload.input = e.target;
+
+    Array.from(fileList).forEach((file) =>{
+
+      ImgUpload.files.push(file);
+
+
+      const reader = new FileReader();
+
+      if (ImgUpload.hasLimit(e)) return;
+
+      reader.onload = () => {
+        const image = new Image();
+        image.src = String(reader.result);
+
+        const div = ImgUpload.getContainer(image);
+        ImgUpload.preview.appendChild(div);
+      };
+
+      reader.readAsDataURL(file);
+    });
+
+
+  },
+  getContainer(image){
+    const div = document.createElement('div');
+    div.classList.add('photo');
+    div.onclick = ImgUpload.removePhoto;
+    
+    div.appendChild(image);
+
+    div.appendChild(ImgUpload.getRemoveButton());
+
+    return div;
+  },
+  getAllFiles(){
+    const dataTransfer = new ClipboardEvent("").clipboardData || new DataTransfer();
+
+    ImgUpload.files.forEach(file => dataTransfer.items.add(file));
+
+    return dataTransfer.files;
+  },
+  getRemoveButton(){
+    const button = document.createElement('i');
+    button.classList.add('material-icons');
+    button.innerHTML = "close";
+    return button;
+  },
+  removePhoto(e){
+    const photoDiv = e.target.parentNode; // <div class="photo">
+    const photosArray = Array.from(ImgUpload.preview.children);
+    const index = photosArray.indexOf(photoDiv);
+
+    ImgUpload.files.splice(index, 1);
+    ImgUpload.input.files = ImgUpload.getAllFiles();
+
+    photoDiv.remove();
+  },
+  hasLimit(event){
+    const { uploadLimit, input, preview } = ImgUpload;
+    const { files: fileList } = input;
+
+    if(fileList.length > uploadLimit){
+      alert (`Envie no máximo ${uploadLimit} fotos`);
+      event.preventDefault();
+      return true;
+    }
+
+    const photosDiv = [];
+    preview.childNodes.forEach(item => {
+      if (item.classList && item.classList.value == "photo"){
+        photosDiv.push(item);
+      }
+    });
+
+    const totalPhotos = fileList.length + photosDiv.length;
+
+    if (totalPhotos > uploadLimit){
+      alert("Você atingiu o limite máximo de fotos")
+      event.preventDefault();
+      return true;
+    }
+
+    return false;
+  },
+  removeOldPhoto(event){
+    const photoDiv = event.target.parentNode;
+
+    if(photoDiv.id){
+      const removedFiles = document.querySelector('input[name="removed_files"]');
+      if(removedFiles){
+        removedFiles.value += `${photoDiv.id},`;
+      }
+    }
+
+  photoDiv.remove();
+  }
+}
+
+const AvatarUpload = {
+  preview: document.querySelector('.avatar-upload'),
+  icon: document.querySelector('.avatar-upload .material-icons'),
+  previewUpload(e){
+    const {files: fileList} = e.target;
+
+    Array.from(fileList).forEach((file) =>{
+
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        const image = new Image();
+        image.src = String(reader.result);
+  
+        AvatarUpload.preview.style.backgroundImage = `url('${image.src}')`;
+        AvatarUpload.preview.classList.add('active');
+        AvatarUpload.icon.classList.add('active');
+        AvatarUpload.icon.innerHTML = 'swap_horiz';
+      };
+
+      reader.readAsDataURL(file);
+    });
+  }
+}
+
+const RecipeGallery = {
+  highlightImg: document.querySelector('.highlight img'),
+  previews: document.querySelectorAll('.mini-gallery img'),
+  setImage(e) {
+    const {target} = e;
+
+    RecipeGallery.previews.forEach(preview => preview.classList.remove('active'));
+    target.classList.add('active');
+
+    RecipeGallery.highlightImg.src = target.src;
+
+  }
+}
 
 if(recipeSections) toggleSections();
 

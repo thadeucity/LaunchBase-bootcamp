@@ -4,9 +4,22 @@
 
 <div class="full-recipe">
   <article>
-    <div class="img-container">
-        <div class="card-image" style="background-image: url({{recipe.image}})"></div>
+    
+    <div class="img-container highlight">
+        <div class="card-image"> <img src="{{files[0].src}}" alt=""></div>  
     </div>
+    <div class="mini-gallery">
+      {% for image in files %}
+        <img 
+          src="{{image.src}}" 
+          alt="{{image.name}}"
+          {% if loop.index0 == 0 %}
+              class="active"
+          {% endif %}
+          onclick="RecipeGallery.setImage(event)"
+        >
+      {% endfor %}
+    </div> 
 
     <div class="recipe-info">
       <h1>{{recipe.title}}</h1>

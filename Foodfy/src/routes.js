@@ -1,6 +1,9 @@
 const express = require ('express');
 const routes = express.Router();
 
+const multerRecipes = require ('./app/middlewares/multerRecipes');
+const multerChefs = require ('./app/middlewares/multerChefs');
+
 const recipes = require('./app/controllers/recipes');
 const viewer = require('./app/controllers/viewer');
 const chefs = require('./app/controllers/chefs');
@@ -30,10 +33,10 @@ routes.get('/admin/chefs/create', chefs.create);
 routes.get('/admin/chefs/:id', chefs.adminShow);
 routes.get('/admin/chefs/:id/edit', chefs.edit);
 
-routes.post('/admin/recipes', recipes.post);
-routes.post('/admin/chefs', chefs.post);
+routes.post('/admin/recipes', multerRecipes.array("photos", 6), recipes.post);
+routes.post('/admin/chefs', multerChefs.array("avatar", 1), chefs.post);
 
-routes.put('/admin/recipes', recipes.put);
-routes.put('/admin/chefs', chefs.put);
+routes.put('/admin/recipes', multerRecipes.array("photos", 6), recipes.put);
+routes.put('/admin/chefs', multerChefs.array("avatar", 1), chefs.put);
 
 module.exports = routes;

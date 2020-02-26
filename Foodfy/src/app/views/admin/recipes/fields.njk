@@ -1,4 +1,34 @@
 <div class="item">
+  <div>Recipe Images</div>
+  <div class="upload-grid">
+    <div class="img-upload">
+      <i class="material-icons">add</i>
+      <input 
+        id="img-input"
+        type="file" 
+        name="photos"
+        multiple
+        accept="image/*"
+        onchange="avatarUpload.handleFileInput(event)"
+      >
+    </div>
+      {% if files %}
+        {% for image in files %}
+          <div class="photo" id="{{image.id}}">
+            <img src="{{image.src}}" alt="{{image.name}}">
+            <i class="material-icons"
+              onclick="ImgUpload.removeOldPhoto(event)"
+            >
+            close
+            </i>
+          </div>
+        {% endfor %}
+        <input type="hidden" name="removed_files">
+      {% endif %}
+  </div>
+</div>
+
+<div class="item">
   <div>Recipe Name</div>
   <div>
     <input 
@@ -23,17 +53,6 @@
     </select>
   </div>
 </div>
-
-<div class="item">
-  <div>Recipe image url</div>
-  <div>
-    <input 
-      type="text" 
-      name="image"
-      value="{{recipe.image}}"
-    >
-  </div>
-</div> 
 
 <div class="item">
   <div>Ingredients</div>

@@ -2,7 +2,7 @@ const db = require('../../config/db');
 const { date } = require('../../lib/utils');
 
 module.exports = {
-  all(callback){
+  all(){
     const QUERY = `
       SELECT 
         chefs.*, count(recipes) AS total_recipes 
@@ -16,13 +16,9 @@ module.exports = {
         BY name
     `;
 
-    db.query(QUERY, function(err, results){
-      if (err) throw `Database Error! ${err}`;
-
-      callback(results.rows);
-    });
+    return db.query(QUERY);
   },
-  create(data,callback){
+  create(data){
     const QUERY = `
       INSERT INTO chefs (
         name,
@@ -38,13 +34,9 @@ module.exports = {
       date(Date.now()).iso
     ];
 
-    db.query(QUERY, VALUES, function(err, results){
-      if (err) throw `Database Error! ${err}`;
-      callback(results.rows[0]);
-    });
-
+    return db.query(QUERY, VALUES);
   },
-  update(data,callback){
+  update(data){
     const QUERY = `
       UPDATE chefs SET
         name=($1),
@@ -59,12 +51,9 @@ module.exports = {
       data.id
     ];
 
-    db.query(QUERY, VALUES, function(err, results){
-      if (err) throw `Database Error! ${err}`;
-      callback(results.rows[0]);
-    });
+    return db.query(QUERY, VALUES);
   },
-  find(id, callback){
+  find(id){
     const QUERY = `
       SELECT
         chefs.*, count(recipes) AS total_recipes
@@ -77,19 +66,25 @@ module.exports = {
       GROUP BY
         chefs.id
     `;
-    db.query(QUERY, [id], function(err, results){
-      if (err) throw `Database Error! ${err}`;
-
-      callback(results.rows[0]);
-    });
+    return db.query(QUERY, [id]);
   },
-  findRecipes(id, callback){
+  findRecipes(id){
     const QUERY = `SELECT * FROM recipes WHERE chef_id = $1`;
 
-    db.query(QUERY, [id], function(err, results){
-      if (err) throw `Database Error! ${err}`;
+    return db.query(QUERY, [id])
+  },
+  files(id){
+    const QUERY = `
+      SELECT 
+        files.*, chef_files.chef_id
+      FROM
+        files
+      LEFT JOIN
+        chef_files on (files.id = chef_files.file_id)
+      WHERE
+        chef_id = $1 
+    `;
 
-      callback(results.rows);
-    });
+    return db.query(QUERY, [id]);
   }
 };
