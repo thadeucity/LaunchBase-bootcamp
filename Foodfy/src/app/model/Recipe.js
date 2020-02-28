@@ -70,10 +70,14 @@ module.exports = {
   },
   all(){
     const QUERY = `
-      SELECT recipes.*, chefs.name as chef_name 
-      from recipes
-      LEFT JOIN chefs ON (recipes.chef_id = chefs.id)
-      ORDER BY name
+      SELECT 
+        recipes.*, chefs.name as chef_name 
+      FROM
+        recipes
+      LEFT JOIN 
+        chefs ON (recipes.chef_id = chefs.id)
+      ORDER BY
+        recipes.updated_at DESC
     `;
 
     return db.query(QUERY)
@@ -111,6 +115,8 @@ module.exports = {
       LEFT JOIN
         chefs ON (recipes.chef_id = chefs.id)
       ${filterQuery}
+      ORDER BY 
+        recipes.updated_at DESC
       LIMIT ${params.limit} OFFSET ${params.offset}
     `;
 

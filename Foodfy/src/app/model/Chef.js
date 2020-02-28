@@ -69,7 +69,16 @@ module.exports = {
     return db.query(QUERY, [id]);
   },
   findRecipes(id){
-    const QUERY = `SELECT * FROM recipes WHERE chef_id = $1`;
+    const QUERY = `
+      SELECT 
+        * 
+      FROM 
+        recipes 
+      WHERE 
+        chef_id = $1
+      ORDER BY
+        recipes.updated_at DESC
+    `;
 
     return db.query(QUERY, [id])
   },
