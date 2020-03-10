@@ -67,8 +67,6 @@ module.exports = {
       }
     });
 
-    console.log(query)
-
     await db.query(query);
     return;
   }

@@ -1,6 +1,14 @@
 const Recipe = require('../model/Recipe');
 const File = require ('../model/File');
 
+function userRelated(recipeUserId, userId, admin){
+  if(admin || recipeUserId == userId){
+    return true;
+  } else {
+    return false;
+  }
+}
+
 module.exports = {
   async index (req, res){
     const LIMIT = 6;
@@ -54,6 +62,7 @@ module.exports = {
   },
   async show (req, res){
     const {id} = req.params;
+
     let results = await Recipe.find(id);
     const recipe = results.rows[0];
 
@@ -82,6 +91,8 @@ module.exports = {
     let results = await Recipe.find(id);
     const recipe = results.rows[0];
 
+    const enable = userRelated (recipe.user_id, req.session.userId);
+
     results = await Recipe.files(recipe.id);
 
     const files = results.rows.map((file, index) => ({
@@ -91,7 +102,7 @@ module.exports = {
     }));
 
 
-    return res.render('admin/recipes/show', {recipe, files});
+    return res.render('admin/recipes/show', {recipe, files, enable});
   },
   async edit (req, res){
     const {id} = req.params;
@@ -102,6 +113,11 @@ module.exports = {
     results = await Recipe.find(id);
     const recipe = results.rows[0];
 
+    const enable = userRelated (recipe.user_id, req.session.userId, req.session.admin);
+    if(!enable) return res.render('admin_layout', {
+      error: 'Only admins or the recipe creator can edit a recipe'
+    });
+
     results = await Recipe.files(recipe.id);
 
     const files = results.rows.map((file, index) => ({
@@ -110,7 +126,7 @@ module.exports = {
       name: `${recipe.title} -image_${index}`
     }));
 
-    return res.render('admin/recipes/edit', {recipe, chefs, files});
+    return res.render('admin/recipes/edit', { recipe, chefs, files });
 
   },
   async post (req, res){
@@ -169,7 +185,6 @@ module.exports = {
     return res.redirect(`/admin/recipes/${recipeId}`);
 
   },
-
   adminIndex (req, res){
     return res.redirect('/admin/recipes')
   },

@@ -1,17 +1,19 @@
-
-// ----------------  COMPANY INFO  ---------------- //
+// ------------------------    COMPANY INFO    ------------------------ //
 
 const companyName = 'Foodfy';
 const companyUrl = 'http://localhost:3000';
 
-const firstLoginPath = '/admin';
+const firstLoginPath = '/admin/login';
+const resetPasswordPath = '/admin/reset-password';
 
 const supportEmail = 'support@foodfy.com';
+
+const address = '1234 Some Street, San Francisco, CA';
 
 const primaryColor = '#6558C3';
 const cardColor = '#F2F2F2';
 
-// ----------------  HEADER IMAGE  ---------------- //
+// ------------------------    HEADER IMAGE    ------------------------ //
 
 const logoSrc = 'https://raw.githubusercontent.com/Rocketseat/bootcamp-launchbase-desafios-02/master/layouts/assets/logo.png';
 const logo = `
@@ -20,15 +22,19 @@ const logo = `
   </div>
 `;
 
-// ----------------  EMAIL STYLING  ---------------- //
+// ------------------------    EMAIL STYLING    ------------------------ //
 
 const cardStyle = `style="
   text-align: left;
   margin: 0 auto;
-  max-width:500px;
+  max-width: 450px;
   background-color: ${cardColor};
   padding: 24px 16px;
   border-radius:8px;
+"`;
+
+const infoStyle = `style="
+  text-align: center;
 "`;
 
 const buttonStyle = `style="
@@ -38,50 +44,71 @@ const buttonStyle = `style="
   text-align: center;
   padding: 8px;
   border-radius:8px;
-  margin-top: 24px;
+  margin: 24px auto;
   text-decoration: none;
   color: white;
   font-size: 16px;
-  font-family:sans-serif
+  font-family:sans-serif;
 "`;
 
 const h2Style = `style="
   font-size: 20px;
-  font-family:sans-serif
+  font-family:sans-serif;
 "`;
 
 const textStyle = `style="
   font-size: 14px;
-  font-family:sans-serif
+  font-family:sans-serif;
 "`;
 
-// ----------------  PARTS BUILDER  ---------------- //
+const noteStyle = `style="
+font-size: 12px;
+color: #444444;
+font-family:sans-serif;
+overflow-wrap: break-word;
+"`;
 
-function writeGreeting (name, lang){
-  let greeting = '';
-  if (lang == 'pt'){
-    greeting = `<h2 ${h2Style}>Olá, ${name}</h2>`;
-  } else{
-    greeting = `<h2 ${h2Style}>Hello, ${name}</h2>`;
-  }
-  return greeting;
+const infoTextStyle = `style="
+  font-size: 12px;
+  color: #999999;
+  font-family:sans-serif;
+"`;
+
+// ------------------------    CREATE PARTS    ------------------------ //
+
+function createLink (path, text){
+  return `<a href="${path}">${text}</a>`;
 }
 
-function createButton (path, text){
-  return `<a href="${path}" target="_blank" ${buttonStyle}>${text}</a>`;
-}
-
-function createParagraphs (textArray){
+function createParagraphs (textArray, type){
   let paragraphs = ``;
+  let style = ``;
+
+  switch (type){
+    case 'text':
+      style = textStyle;
+      break;
+    case 'note':
+      style = noteStyle;
+      break;
+    case 'info':
+      style = infoTextStyle;
+  }
+
   for (let text of textArray){
     paragraphs = `${paragraphs}
-      <p ${textStyle}>${text}</p>
+      <p ${style}>${text}</p>
     `;
   }
   return paragraphs;
 }
 
-// ----------------  EMAIL CREATOR  ---------------- //
+
+function createButton (path, text){
+  return `<a href="${path}" target="_blank" ${buttonStyle}>${text}</a>`;
+}
+
+// ------------------------    EMAIL BUILDER    ------------------------ //
 
 function createEmail(content){
   let emailHtml = `
@@ -93,8 +120,8 @@ function createEmail(content){
       <BODY>
         <div ${cardStyle}>
         ${logo}
-        ${writeGreeting(content.username, content.lang)}
-        ${createParagraphs(content.text)}
+        <h2 ${h2Style}>${content.greeting}</h2>
+        ${createParagraphs(content.text, 'text')}
 
   `;
 
@@ -104,7 +131,22 @@ function createEmail(content){
     `;
   }
 
+  if (content.appendText){
+    emailHtml = `${emailHtml}
+      ${createParagraphs(content.appendText, 'text')}
+    `;
+  }
+
+  if (content.noteText){
+    emailHtml = `${emailHtml}
+      ${createParagraphs(content.noteText, 'note')}
+    `;
+  }
+
   emailHtml = `${emailHtml}
+        </div>
+        <div ${infoStyle}>
+          ${createParagraphs(content.info, 'info')}
         </div>
       </BODY>
     </HTML>
@@ -113,101 +155,160 @@ function createEmail(content){
   return emailHtml;
 }
 
-// --------  EMAIL ONLY TEXT CREATOR  -------- //
+// ------------------------    TEXT ONLY BUILDER    ------------------------ //
 
-function createEmailText(content){
-  let emailText = '';
+function createTextOnly(content){
+  let emailText = `${content.greeting}`;
 
-  if(content.lang == 'pt'){
-    emailText = `Olá ${content.username}`;
-  } else{
-    emailText = `Hello ${content.username}`;
-  }
-
-  for (let text of content.text){
+  for (let text of content.textOnly){
     emailText = `${emailText}
-    ${text}
-    `;
-  }
-
-  if (content.buttonText){
-    emailText = `${emailText}
-      ${content.buttonText},
-      ${content.buttonPath}
-    `;
+      ${text}`
+    ;
   }
 
   return emailText;
+
 }
 
-// ----------------  EXPORTABLE TEMPLATES  ---------------- //
+// ------------------------    TEXT BY LANGUAGE    ------------------------ //
 
-function welcomeEmail(type, name, password, lang){
+const textPortuguese = {
+  info: [ 
+    `© 2020 ${companyName}. Todos os direitos reservados.`,
+    `${companyName}, ${address}`
+  ],
+  greeting(name){
+    return `Olá, ${name}`;
+  }
+};
+
+const textEnglish = {
+  info: [ 
+    `© 2020 ${companyName}. All rights reserved.`,
+    `${companyName}, ${address}`
+  ],
+  greeting(name){
+    return `Hello, ${name}`;
+  }
+};
+
+// ------------------------    EXPORT BUILDERS    ------------------------ //
+
+function welcomeEmail(data){
   const emailContent = {
-    username: name,
     buttonPath: `${companyUrl}${firstLoginPath}`,
   }
 
-  if (lang == 'pt'){
-    emailContent.lang = 'pt';
+  if (data.language == 'pt'){
+    emailContent.info = textPortuguese.info;
+
+    emailContent.greeting = textPortuguese.greeting(data.name);
+
     emailContent.text = [
-      `Seu cadastro no ${companyName} foi efetuado com sucesso!`,
-      `Sua senha temporária é <b>${password}</b> durante seu primeiro acesso
-        solicitaremos que altere sua senha para validar sua conta`
+      `Seu cadastro no ${companyName} foi efetuado com sucesso, estamos muito 
+        felizes por ter você conosco!`,
+      `Use a senha temporária <b>${data.password}</b> para acessar sua conta pela
+        primeira vez.`,
+      `Ao acessá-la solicitaremos que altere sua senha para que possamos 
+        validar sua conta.`,
+      `Caso tenha qualquer dúvida sinta-se à vontade para nos enviar um 
+        ${createLink(supportEmail,'email')}.`
     ];
-    emailContent.buttonText = 'ACESSE SUA CONTA';
+
+    emailContent.buttonText = `ACESSAR MINHA CONTA`;
+
+    emailContent.appendText = [
+      `Caso tenha qualquer problema em acessar o link acima você pode copiar e 
+        colar o seguinte endereço em seu navegador: ${companyUrl}${firstLoginPath}`
+    ];
+
+    emailContent.textOnly = [
+      `Seu cadastro no ${companyName} foi efetuado com sucesso, estamos muito felizes por ter você conosco!`,
+      `Use a senha temporária ${data.password} para acessar sua conta pela primeira vez.`,
+      `Ao acessá-la solicitaremos que altere sua senha para que possamos validar sua conta.`,
+      `Acesse sua conta pelo link ${companyUrl}${firstLoginPath}`,
+      `Quaisquer dúvidas sinta-se a vontade para nos enviar um email: ${supportEmail}`
+    ];
+
   } else {
+    emailContent.info = textEnglish.info;
+
+    emailContent.greeting = textEnglish.greeting(data.name);
+
     emailContent.text = [
-      `Your registration at ${companyName} is almost complete!`,
-      `Your temporary password is <b>${password}</b> during you first access
-        we will ask you to change your password to validate your account`
+      `You are successfully registered, We’re thrilled to have you on board at ${companyName} with us.`,
+      `Use yur temporary password <b>${data.password}</b> to access your account for the first time.`,
+      `During your first login we will ask you to change your password to validate your account.`,
+      `Fell free to contact us by ${createLink(supportEmail,'email')} for any questions you might have.`
     ];
-    emailContent.buttonText = 'VALIDATE ACCOUNT';
+
+    emailContent.buttonText = `ACCESS MY ACCOUNT`;
+
+    emailContent.appendText = [
+      `If you’re having trouble with the button above,
+        copy and paste the URL below into your web browser.`,
+      `${companyUrl}${firstLoginPath}`
+    ];
+
+    emailContent.textOnly = [
+      `You were successfully registered, We’re thrilled to have you on board.`,
+      `Use yur temporary password ${data.password} to access your account for the first time.`,
+      `During your first login we will ask you to change your password to validate your account.`,
+      `Access your account with the following link ${companyUrl}${firstLoginPath}.`,
+      `Fell free to contact us for any questions you might have: ${supportEmail}`
+    ];
+
   }
 
-  if (type == 'html'){
+  if (data.textOnly){
+    return createTextOnly(emailContent);
+  } else {
     return createEmail(emailContent);
-  } else{
-    emailContent.text[1].replace(/"[<]b[>]"/g, '');
-    return createEmailText(emailContent);
   }
-
-  
 }
 
-function forgotPasswordEmail(name, token, lang){
+function resetPasswordEmail(data){
   const emailContent = {
-    username: name,
-    buttonPath: `${companyUrl}${firstLoginPath}?${token}`,
+    buttonPath: `${companyUrl}${resetPasswordPath}?email=${data.email}&token=${data.token}`,
   }
 
-  if (lang == 'pt'){
-    emailContent.text = [
-      `Verificamos que você esqueceu sua senha, não há problema clique no link
-        abaixo e te redirecionaremos para uma página de recuperação de senha.`,
-      `Caso não tenha sido você que realizou a solicitação de recuperação de senha,
-        por favor entre em contato conosco o mais rapidamente possível para que
-        possamos solucionar o problema.`,
-      `Nosso email para suporte é: ${supportEmail}`
-    ];
-    emailContent.buttonText = 'RECUPERE SUA SENHA';
+  emailContent.info = textEnglish.info;
+  emailContent.greeting = textEnglish.greeting(data.name);
+
+  emailContent.text = [
+    `You recently requested to reset your password for your ${companyName} account.
+      Use the button below to reset it. <b>This password reset is only valid for the next hour.</b>`,
+  ];
+
+  emailContent.buttonText = `RESET YOUR PASSWORD`;
+
+  emailContent.appendText = [
+    `For security, if you did not request a password reset, please ignore this
+      email or ${createLink(supportEmail,'contact support')} if you have questions.`,
+  ];
+
+  emailContent.noteText = [
+    `</br> If you’re having trouble with the button above, copy and paste
+      the URL below into your web browser.`,
+    `${companyUrl}${resetPasswordPath}?email=${data.email}&token=${data.token}`
+  ]
+
+  emailContent.textOnly = [
+    `You recently requested to reset your password for your ${companyName} account.`,
+    `Copy and paste the URL below into your web browser to reset your password.`,
+    `${companyUrl}${resetPasswordPath}?email=${data.email}&token=${data.token}`,
+    `This password reset is only valid for the next hour.`,
+    `If you did not request a password reset, please ignore this email or contact support if you have questions. ${supportEmail}`
+  ];
+
+  if (data.textOnly){
+    return createTextOnly(emailContent);
   } else {
-    emailContent.text = [
-      `We noticed you forgot your password, don't worry click the link bellow and
-        we will redirect you to a password revery page`,
-      `In case you were not the one asking for the password recovery, please 
-        contact us as soon as possible so we can solve this issue.`,
-      `Our support email for contact is ${supportEmail}`
-    ];
-    emailContent.buttonText = 'RECOVER PASSWORD';
+    return createEmail(emailContent);
   }
-  
-
-  return createEmail(emailContent);
 }
-
 
 module.exports = {
   welcomeEmail,
-  forgotPasswordEmail
+  resetPasswordEmail
 }

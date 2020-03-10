@@ -6,7 +6,9 @@
 
   <div class="admin-top-bar">
     <h1>Recipe: {{recipe.title}}</h1>
-    <a href="/admin/recipes/{{recipe.id}}/edit">Edit Recipe</a>
+    {% if enable %}
+      <a href="/admin/recipes/{{recipe.id}}/edit">Edit Recipe</a>
+    {% endif %}
   </div>
 
   <div class="img-container highlight">

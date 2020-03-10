@@ -1,3 +1,10 @@
+const User = require ('../model/User');
+const crypto = require('crypto');
+
+const mailer = require('../../config/mailer');
+const mailBuilder = require ('../../lib/emailBuilder');
+
+
 module.exports={
   loginForm(req, res){
     return res.render('session/login');
@@ -26,13 +33,52 @@ module.exports={
   forgotPasswordForm(req,res){
     return res.render('session/forgot-password');
   },
+  async forgotPassword(req, res){
+    const user = req.user;
+
+    try{
+      const token = crypto.randomBytes(20).toString('hex');
+
+      let tokenExpireDate = new Date();
+      tokenExpireDate = tokenExpireDate.setHours(tokenExpireDate.getHours() + 1);
+
+      await User.update(user.id, {
+        reset_token: token,
+        reset_token_expires: tokenExpireDate
+      });
+
+      await mailer.sendMail({
+        to: user.email,
+        from: '"Foodfy" no-reply@foodfy.com.br',
+        subject: `Foodfy - Password Reset`,
+        text: mailBuilder.resetPasswordEmail({
+          name: user.name,
+          email: user.email,
+          token,
+          textOnly: true
+        }),
+        html: mailBuilder.resetPasswordEmail({
+          name: user.name,
+          email: user.email,
+          token,
+        }),
+        
+      });
+
+    } catch(err){
+      return res.render('session/forgot-password', {
+        error: `Something went wrong, the system was unable to send the recover password email, try again later!`
+      });
+    }
+
+    return res.render('session/forgot-password', {
+      success: `The email to recover your password was sent to you, check your mail`
+    });
+  },
   resetPasswordForm(req,res){
     return res.render('session/reset-password', {
       email: req.query.email,
       token: req.query.token
     });
-  },
-  resetPassword(req,res){
-    return res.send(req.body);
   }
 }

@@ -36,9 +36,16 @@ module.exports={
       await mailer.sendMail({
         to: email,
         from: '"Foodfy" no-reply@foodfy.com.br',
-        subject: `Bem vindo ao Foodfy - ${name}`,
-        text: mailBuilder.welcomeEmail('', name, data.password),
-        html: mailBuilder.welcomeEmail('html', name, data.password),
+        subject: `Welcome to Foodfy - ${name}`,
+        text: mailBuilder.welcomeEmail({
+          name, 
+          password: data.password,
+          textOnly: true
+        }),
+        html: mailBuilder.welcomeEmail({
+          name,
+          password: data.password
+        }),
       });
 
     } catch(err){
@@ -79,15 +86,37 @@ module.exports={
         req.session.verified = true;
       }
 
-      return res.redirect('/admin');
-
     } catch (err){
       console.error(err);
       return res.render('session/change-password', {
         error: 'Something went wrong, try again later'
       });
     }
-    
+
+    return res.render('session/login', {
+      user: req.body,
+      success: "Your password was updated!"
+    });
+
+  },
+  async resetPassword(req,res){
+    try{
+      const {id} = req.user;
+      password = await hash(req.body.password, 8);
+
+      await User.update(id, {password}); 
+
+    } catch (err){
+      console.error(err);
+      return res.render('session/reset-password', {
+        error: 'Something went wrong, try again later'
+      });
+    }
+
+    return res.render('session/login', {
+      user: req.body,
+      success: "Your password was updated!"
+    });
 
   }
 }

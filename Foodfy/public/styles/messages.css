@@ -1,7 +1,10 @@
 @keyframes hidemessage{
-  to {
+  99% {
     top: -50px;
     opacity: 0;
+  }
+  100% {
+    top: -1000px;
   }
 }
 
@@ -15,6 +18,7 @@
   color: white;
   opacity: 1;
   border-radius: 4px;
+  z-index: 99;
 
   animation: hidemessage 400ms 5s ease-out forwards;
 }

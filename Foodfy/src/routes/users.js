@@ -6,14 +6,16 @@ const ProfileController = require('../app/controllers/ProfileController');
 
 const UserValidator = require('../app/validators/user');
 
+const { adminOnly } = require('../app/middlewares/session');
+
 
 routes.get('/', UserController.listUsers);
-routes.get('/create', UserController.createForm);
-routes.get('/edit', UserController.editForm);
+routes.get('/create', adminOnly, UserController.createForm);
+routes.get('/edit', adminOnly, UserController.editForm);
 
-routes.post('/', UserValidator.post, UserController.createUser);
-routes.put('/', UserController.updateUser);
-routes.delete('/', UserController.deleteUser);
+routes.post('/', adminOnly, UserValidator.post, UserController.createUser);
+routes.put('/', adminOnly, UserController.updateUser);
+routes.delete('/', adminOnly, UserController.deleteUser);
 
 
 //////////    PROFILE    //////////
