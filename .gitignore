@@ -1,24 +1,11 @@
 .vscode
 
-node_modules/
+.env
 
-Module-03/Exercise-01/node_modules/*
-Module-03/Exercise-02/node_modules/*
-Module-04/Exercise-01/node_modules/*
-Module-04/Exercise-02/node_modules/*
-Module-04/Exercise-03/node_modules/*
-Module-04/Exercise-04/node_modules/*
-Module-04/Exercise-05/node_modules/*
-Module-04/Exercise-06/node_modules/*
-Module-04/Exercise-07/node_modules/*
-Module-05/Exercise-01/node_modules/*
-Module-05/Exercise-02/node_modules/*
-Module-05/Exercise-03/node_modules/*
+node_modules/
 
 Foodfy/public/img/chefs_images/*
 Foodfy/public/img/recipes_images/*
-
-Challenge-01-Foodfy/node_modules/*
 
 
 

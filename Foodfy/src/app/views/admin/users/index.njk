@@ -1,0 +1,55 @@
+{% extends "admin_layout.njk" %}
+
+{% block content %}
+
+<div class="admin-top-bar">
+      <h1>Users</h1>
+      {% if user.is_admin %}
+        <a href="/admin/users/create">New User</a>
+      {% endif %}
+</div>
+
+<div class="users-grid">
+
+  <div class="card-user" id="{{user.id}}">
+    <h2>{{user.name}}Carlos Borges</h2>
+    <p>{{user.email}}carlos@gmail.com</p>
+    {% if user.is_admin %}
+      <div class="manage-user">
+        <a href="#">Edit</a>
+        <a href="#">Remove</a>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="card-user" id="{{user.id}}">
+    <h2>{{user.name}}Carlos Borges</h2>
+    <p>{{user.email}}carlos@gmail.com</p>
+    <div class="manage-user">
+      <a href="#">Edit</a>
+      <a href="#">Remove</a>
+    </div>
+  </div>
+
+  <div class="card-user" id="{{user.id}}">
+    <h2>{{user.name}}Carlos Borges</h2>
+    <p>{{user.email}}carlos@gmail.com</p>
+    <div class="manage-user">
+      <a href="#">Edit</a>
+      <a href="#">Remove</a>
+    </div>
+  </div>
+
+  <div class="card-user" id="{{user.id}}">
+    <h2>{{user.name}}Carlos Borges</h2>
+    <p>{{user.email}}carlos@gmail.com</p>
+    <div class="manage-user">
+      <a href="#">Edit</a>
+      <a href="#">Remove</a>
+    </div>
+  </div>
+
+
+</div>
+
+{% endblock %}

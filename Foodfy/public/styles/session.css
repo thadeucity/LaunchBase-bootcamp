@@ -17,12 +17,14 @@
   margin-bottom: 36px;
 }
 
-.admin-form.session .login-options{
+.admin-form.session .session-options{
   display: grid;
   grid-template-columns: 1fr auto;
+  grid-template-areas: "link button";
 }
 
 .admin-form.session button{
+  grid-area: button;
   right: 0;
   text-decoration: none;
   font-weight: bold;

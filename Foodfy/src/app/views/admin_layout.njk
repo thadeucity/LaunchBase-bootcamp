@@ -7,6 +7,8 @@
 
 <body>
 
+{% include "parts/messages.njk" %}
+
   <div id="wrapper">
     <div id="black-bar"></div>
     <header class="admin">
@@ -14,7 +16,11 @@
       <nav>
         <a href="/admin/recipes">Recipes</a>
         <a href="/admin/chefs">Chefs</a>
+        <a href="/admin/users">Users</a>
       </nav>
+        <form action="/admin/logout" method="post">
+          <button class='logout'>Exit</button>
+        </form>
     </header>
 
     <main>
@@ -23,7 +29,8 @@
 
   </div>
 
-  <script src="/scripts.js"></script>
+<script src="/scripts/scripts.js"></script>
+<script src="/scripts/form-validation.js"></script>
 
 </body>
 

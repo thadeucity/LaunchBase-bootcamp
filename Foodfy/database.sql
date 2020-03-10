@@ -11,6 +11,7 @@ CREATE TABLE "users" (
   "reset_token" TEXT,
   "reset_token_expires" TEXT,
   "is_admin" BOOLEAN DEFAULT false,
+  "verified" BOOLEAN DEFAULT false;
   "created_at" TIMESTAMP DEFAULT(now()),
 	"updated_at" TIMESTAMP DEFAULT(now())
 );
