@@ -4,7 +4,7 @@ const { hash } = require ('bcryptjs');
 const mailer = require('../../config/mailer');
 const mailBuilder = require ('../../lib/emailBuilder')
 
-const User = require('../model/User');
+const User = require('../models/User');
 
 module.exports={
   listUsers(req, res){

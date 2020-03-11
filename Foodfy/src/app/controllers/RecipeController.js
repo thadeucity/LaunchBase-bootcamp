@@ -1,5 +1,5 @@
-const Recipe = require('../model/Recipe');
-const File = require ('../model/File');
+const Recipe = require('../models/Recipe');
+const File = require ('../models/File');
 
 function userRelated(recipeUserId, userId, admin){
   if(admin || recipeUserId == userId){
@@ -63,10 +63,9 @@ module.exports = {
   async show (req, res){
     const {id} = req.params;
 
-    let results = await Recipe.find(id);
-    const recipe = results.rows[0];
+    const recipe = await Recipe.find(id);
 
-    results = await Recipe.files(recipe.id);
+    let results = await Recipe.files(recipe.id);
 
     const files = results.rows.map((file, index) => ({
       ...file,
@@ -80,20 +79,24 @@ module.exports = {
 
   async create (req, res){
 
-    let results = await Recipe.chefsList();
-    const chefs = results.rows;
+    const chefs = await Recipe.chefsList();
 
     return res.render('admin/recipes/create', {chefs});
 
   },
   async adminShow (req, res){
     const {id} = req.params;
-    let results = await Recipe.find(id);
-    const recipe = results.rows[0];
+    const recipe = await Recipe.find(id);
+
+    if(!recipe){
+      return res.render('admin_layout', {
+        error: `The recipe you are looking for doesn't exist!`
+      });
+    }
 
     const enable = userRelated (recipe.user_id, req.session.userId);
 
-    results = await Recipe.files(recipe.id);
+    let results = await Recipe.files(recipe.id);
 
     const files = results.rows.map((file, index) => ({
       ...file,
@@ -107,18 +110,16 @@ module.exports = {
   async edit (req, res){
     const {id} = req.params;
 
-    let results = await Recipe.chefsList();
-    const chefs = results.rows;
+    const chefs = await Recipe.chefsList();
 
-    results = await Recipe.find(id);
-    const recipe = results.rows[0];
+    const recipe = await Recipe.find(id);
 
     const enable = userRelated (recipe.user_id, req.session.userId, req.session.admin);
     if(!enable) return res.render('admin_layout', {
       error: 'Only admins or the recipe creator can edit a recipe'
     });
 
-    results = await Recipe.files(recipe.id);
+    let results = await Recipe.files(recipe.id);
 
     const files = results.rows.map((file, index) => ({
       ...file,
@@ -130,56 +131,62 @@ module.exports = {
 
   },
   async post (req, res){
-    const keys = Object.keys(req.body);
-    for (key of keys){
-      if(req.body[key] == ""){
-        return res.send('Please, fill all fields');
+    try{
+
+      let results = await Recipe.create(req.body, req.session.userId);
+      const recipeId = results.rows[0].id;
+
+      for (file of req.files){
+        results = await File.create({...file});
+        await File.relate(results.rows[0].id, recipeId);
       }
-    }
 
-    if(req.files.length == 0){
-      return res.send('Please, send at least one image')
-    } else if(req.files.length > 5){
-      return res.send('Please, send less than 5 images')
-    }
-
-
-    let results = await Recipe.create(req.body);
-    const recipeId = results.rows[0].id;
-
-    for (file of req.files){
-      results = await File.create({...file});
-      await File.relate(results.rows[0].id, recipeId);
+    } catch (err){
+      console.error(err);
+      return res.render('admin/recipes/create', {
+        chefs,
+        recipe: req.body,
+        error: 'Something went wrong, try again later'
+      });
     }
 
     return res.redirect(`/admin/recipes/${recipeId}`);
   },
   async put (req,res){
-    const keys = Object.keys(req.body);
-    for (key of keys){
-      if(req.body[key] == "" && key != "removed_files"){
-        return res.send('Please, fill all fields');
+    let recipeId = null;
+    let results = null;
+    try {
+      const recipe = await Recipe.find(req.body.id);
+
+      const enable = userRelated (recipe.user_id, req.session.userId, req.session.admin);
+      if(!enable) return res.render('admin_layout', {
+        error: 'Only admins or the recipe creator can edit a recipe'
+      });
+
+      recipeId = await Recipe.update(req.body, req.session.userId);
+
+      if(req.files.length != 0){
+        for (file of req.files){
+          results = await File.create({...file});
+          await File.relate(results.rows[0].id, recipeId);
+        }
       }
-    }
 
-    let results = await Recipe.update(req.body);
-    const recipeId = results.rows[0].id;
+      if (req.body.removed_files){
+        const removedFiles = req.body.removed_files.split(',');
+        const lastIndex = removedFiles.length - 1;
+        removedFiles.splice(lastIndex, 1);
 
-    if(req.files.length != 0){
-      for (file of req.files){
-        results = await File.create({...file});
-        await File.relate(results.rows[0].id, recipeId);
+        for (fileId of removedFiles){
+          await File.delete(fileId);
+        }
       }
-    }
 
-    if (req.body.removed_files){
-      const removedFiles = req.body.removed_files.split(',');
-      const lastIndex = removedFiles.length - 1;
-      removedFiles.splice(lastIndex, 1);
-
-      for (fileId of removedFiles){
-        await File.delete(fileId);
-      }
+    } catch (err) {
+      console.error(err);
+      if(!enable) return res.render('admin_layout', {
+        error: 'something unpredictable happened, try again later!'
+      });
     }
 
     return res.redirect(`/admin/recipes/${recipeId}`);

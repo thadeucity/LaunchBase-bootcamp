@@ -1,23 +1,22 @@
 const express = require ('express');
 const routes = express.Router();
 
-const recipes = require('../app/controllers/recipes');
-const viewer = require('../app/controllers/viewer');
-const chefs = require('../app/controllers/chefs');
+const RecipeController = require('../app/controllers/RecipeController');
+const ChefController = require('../app/controllers/ChefController');
+const ViewerController = require('../app/controllers/ViewerController');
 
 const admin = require('./admin');
 
-
 // --------------------- PUBLIC AREA --------------------- //
 
-routes.get('/about', viewer.about);
+routes.get('/about', ViewerController.about);
 
-routes.get('/', recipes.index);
-routes.get('/recipes', recipes.recipes);
-routes.get('/recipes/:id', recipes.show);
+routes.get('/', RecipeController.index);
+routes.get('/recipes', RecipeController.recipes);
+routes.get('/recipes/:id', RecipeController.show);
 
-routes.get('/chefs', chefs.chefs);
-routes.get('/chefs/:id', chefs.show);
+routes.get('/chefs', ChefController.chefs);
+routes.get('/chefs/:id', ChefController.show);
 
 // --------------------- ADMIN AREA --------------------- //
 

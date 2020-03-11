@@ -4,13 +4,15 @@
 
 <div class="admin-top-bar">
       <h1>Manage chefs</h1>
-      <a href="/admin/chefs/create">New chef</a>
+      {% if enable %}
+        <a href="/admin/chefs/create">New chef</a>
+      {% endif %}
 </div>
 
 <div class="chefs-grid admin">
   {% for chef in chefs %}
     <div class="card admin" id="{{chef.id}}">
-      <div class="img-container">
+      <div class="img-container avatar">
         <div class="card-image">
           <img src="{{chef.avatar}}" alt="{{chef.name}} - thumbnail">
         </div>

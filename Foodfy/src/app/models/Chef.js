@@ -2,7 +2,7 @@ const db = require('../../config/db');
 const { date } = require('../../lib/utils');
 
 module.exports = {
-  all(){
+  async all(){
     const QUERY = `
       SELECT 
         chefs.*, count(recipes) AS total_recipes 
@@ -16,7 +16,8 @@ module.exports = {
         BY name
     `;
 
-    return db.query(QUERY);
+    const results = await db.query(QUERY);
+    return results.rows;
   },
   create(data){
     const QUERY = `

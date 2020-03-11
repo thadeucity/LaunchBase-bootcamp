@@ -1,11 +1,10 @@
-const Chef = require('../model/Chef');
-const Recipe = require('../model/Recipe');
-const File = require ('../model/File');
+const Chef = require('../models/Chef');
+const Recipe = require('../models/Recipe');
+const File = require ('../models/File');
 
 module.exports = {
   async chefs (req, res){
-    let results = await Chef.all();
-    let chefs = results.rows;
+    let chefs = await Chef.all();
 
     for (chef of chefs){
       results = await Chef.files(chef.id);
@@ -47,8 +46,9 @@ module.exports = {
 
   },
   async adminChefs (req, res){
-    let results = await Chef.all();
-    let chefs = results.rows;
+    let chefs = await Chef.all();
+
+    const enable = req.session.admin;
 
     for (chef of chefs){
       results = await Chef.files(chef.id);
@@ -60,13 +60,21 @@ module.exports = {
       }
     }
     
-    return res.render('admin/chefs/index', {chefs});
+    return res.render('admin/chefs/index', {chefs, enable});
   },
   async adminShow (req, res){
     const {id} = req.params;
 
+    const enable = req.session.admin;
+
     results = await Chef.find(id);
     const chef = results.rows[0];
+
+    if (!chef){
+      return res.render('admin_layout', {
+        error: `The chef you are looking for doesn't exist!`
+      });
+    }
 
     results = await Chef.findRecipes(id);
     let recipes = results.rows;
@@ -85,7 +93,7 @@ module.exports = {
       recipe.cardImage = `${req.protocol}://${req.headers.host}${srcEnd}`;
     }
 
-    return res.render('admin/chefs/show', {chef, recipes});
+    return res.render('admin/chefs/show', {chef, recipes, enable});
   },
   create (req, res){
     return res.render('admin/chefs/create');
@@ -100,18 +108,7 @@ module.exports = {
 
   },
   async post (req, res){
-    const keys = Object.keys(req.body);
-    for (key of keys){
-      if(req.body[key] == ""){
-        return res.send('Please, fill all fields');
-      }
-    }
-
-    if(req.files.length == 0){
-      return res.send('Please, send at least one image for the Avatar')
-    } else if(req.files.length > 1){
-      return res.send('Please, send only one photo for the Avatar')
-    }
+    
 
     let results = await Chef.create(req.body);
     const chefId = results.rows[0].id;

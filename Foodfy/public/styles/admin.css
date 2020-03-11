@@ -96,6 +96,12 @@ header.admin img{
   font-weight: bold;
 }
 
+/* ========================= ADMIN CHEFS ========================= */
+
+.card.admin .img-container.avatar{
+  border-radius: 50%;
+}
+
 
 
 

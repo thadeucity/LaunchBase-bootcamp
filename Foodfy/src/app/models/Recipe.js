@@ -2,11 +2,11 @@ const db = require('../../config/db');
 const { date } = require('../../lib/utils');
 
 module.exports = {
-  create(data){
+  create(data, userId){
     const QUERY = `
       INSERT INTO recipes (
         chef_id,
-        image,
+        user_id,
         title,
         ingredients,
         preparation,
@@ -18,7 +18,7 @@ module.exports = {
 
     const VALUES = [
       data.chef_id,
-      data.image,
+      userId,
       data.title,
       data.ingredients,
       data.preparation,
@@ -29,11 +29,11 @@ module.exports = {
     return db.query(QUERY, VALUES);
 
   },
-  update(data){
+  async update(data, userId){
     const QUERY = `
       UPDATE recipes SET
         chef_id=($1),
-        image=($2),
+        user_id=($2),
         title=($3),
         ingredients=($4),
         preparation=($5),
@@ -44,17 +44,18 @@ module.exports = {
 
     const VALUES = [
       data.chef_id,
-      data.image, 
+      userId, 
       data.title,
       data.ingredients,
       data.preparation,
       data.information,
       data.id
     ];
-
-    return db.query(QUERY, VALUES);
+  
+    const results = await db.query(QUERY, VALUES);
+    return results.rows[0].id;
   },
-  find(id){
+  async find(id){
     const QUERY = `
       SELECT
         recipes.*, chefs.name AS chef_name
@@ -66,7 +67,8 @@ module.exports = {
         recipes.id = $1
     `;
 
-    return db.query(QUERY, [id]);
+    const results = await db.query(QUERY, [id]);
+    return results.rows[0];
   },
   all(){
     const QUERY = `
@@ -122,14 +124,15 @@ module.exports = {
 
     return db.query(QUERY);
   },
-  chefsList(){
+  async chefsList(){
     const QUERY = `
       SELECT name, id
       from chefs
       ORDER BY name
     `;
 
-    return db.query(QUERY);
+    const results = await db.query(QUERY);
+    return results.rows;
   },
   files(id){
     const QUERY = `
