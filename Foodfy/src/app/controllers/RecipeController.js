@@ -1,46 +1,38 @@
 const Recipe = require('../models/Recipe');
+const Chef = require('../models/Chef');
 const File = require ('../models/File');
-
-function userRelated(recipeUserId, userId, admin){
-  if(admin || recipeUserId == userId){
-    return true;
-  } else {
-    return false;
-  }
-}
 
 module.exports = {
   async index (req, res){
-    const LIMIT = 6;
 
-    results = await Recipe.mostViewed(LIMIT);
-    let recipes = results.rows;
+    const paginate = {
+      limit: 6,
+      offset: 0
+    }
+
+    const recipes = await Recipe.find({paginate});
 
     for (recipe of recipes){
-      results = await Recipe.files(recipe.id);
-      let srcEnd = results.rows[0].path.replace('public', '');
-      recipe.cardImage = `${req.protocol}://${req.headers.host}${srcEnd}`;
+      recipeImg = await Recipe.files(recipe.id);
+      recipe.cardImage = recipeImg[0].path.replace('public', '');
     }
 
     return res.render('public/index', {recipes});
-
   },
   async recipes (req, res){
     let { filter, page, limit } = req.query;
 
     page = page || 1;
     limit = limit || 12;
-    let offset = limit * (page-1);
+    offset = (limit * (page-1));
 
-    const params = {
-      limit,
-      offset,
-      filter
-    }
+    let params = {};
 
-    results = await Recipe.paginate(params);
+    params.paginate = {limit, offset};
 
-    let recipes = results.rows;
+    if(filter) params.search = filter;
+
+    const recipes = await Recipe.find(params);
 
     let pagination = {
       total: 0,
@@ -52,9 +44,8 @@ module.exports = {
     }  
 
     for (recipe of recipes){
-      results = await Recipe.files(recipe.id);
-      let srcEnd = results.rows[0].path.replace('public', '');
-      recipe.cardImage = `${req.protocol}://${req.headers.host}${srcEnd}`;
+      recipeImg = await Recipe.files(recipe.id);
+      recipe.cardImage = recipeImg[0].path.replace('public', '');
     }
 
     return res.render('public/recipes', {recipes, pagination, filter});
@@ -62,92 +53,82 @@ module.exports = {
   },
   async show (req, res){
     const {id} = req.params;
+    const recipe = await Recipe.findOne(id);
 
-    const recipe = await Recipe.find(id);
+    let files = await Recipe.files(recipe.id);
 
-    let results = await Recipe.files(recipe.id);
-
-    const files = results.rows.map((file, index) => ({
+    files = files.map((file, index) => ({
       ...file,
-      src: `${req.protocol}://${req.headers.host}${file.path.replace('public', '')}`,
+      src: `${file.path.replace('public', '')}`,
       name: `${recipe.title} -image_${index}`
     }));
-
 
     return res.render('public/recipe_show', {recipe, files});
   },
 
-  async create (req, res){
+  async adminRecipes (req, res){
+    const recipes = await Recipe.findAll();
 
-    const chefs = await Recipe.chefsList();
+    for (recipe of recipes){
+      recipeImg = await Recipe.files(recipe.id);
+      recipe.cardImage = recipeImg[0].path.replace('public', '');
+    }
 
-    return res.render('admin/recipes/create', {chefs});
-
+    return res.render('admin/recipes/index', {recipes});
   },
   async adminShow (req, res){
     const {id} = req.params;
-    const recipe = await Recipe.find(id);
+    const recipe = await Recipe.findOne(id);
 
-    if(!recipe){
-      return res.render('admin_layout', {
-        error: `The recipe you are looking for doesn't exist!`
-      });
-    }
+    let files = await Recipe.files(recipe.id);
 
-    const enable = userRelated (recipe.user_id, req.session.userId);
-
-    let results = await Recipe.files(recipe.id);
-
-    const files = results.rows.map((file, index) => ({
+    files = files.map((file, index) => ({
       ...file,
-      src: `${req.protocol}://${req.headers.host}${file.path.replace('public', '')}`,
+      src: `${file.path.replace('public', '')}`,
       name: `${recipe.title} -image_${index}`
     }));
 
 
-    return res.render('admin/recipes/show', {recipe, files, enable});
+    return res.render('admin/recipes/show', {recipe, files});
+  },
+  async create (req, res){
+    const chefs = await Chef.findAll();
+    return res.render('admin/recipes/create', {chefs});
   },
   async edit (req, res){
     const {id} = req.params;
 
-    const chefs = await Recipe.chefsList();
+    const chefs = await Chef.findAll();
+    const recipe = await Recipe.findOne(id);
+    let files = await Recipe.files(recipe.id);
 
-    const recipe = await Recipe.find(id);
-
-    const enable = userRelated (recipe.user_id, req.session.userId, req.session.admin);
-    if(!enable) return res.render('admin_layout', {
-      error: 'Only admins or the recipe creator can edit a recipe'
-    });
-
-    let results = await Recipe.files(recipe.id);
-
-    const files = results.rows.map((file, index) => ({
+    files = files.map((file, index) => ({
       ...file,
-      src: `${req.protocol}://${req.headers.host}${file.path.replace('public', '')}`,
+      src: `${file.path.replace('public', '')}`,
       name: `${recipe.title} -image_${index}`
     }));
 
     return res.render('admin/recipes/edit', { recipe, chefs, files });
-
   },
   async post (req, res){
-    try{
+    let {title, chef_id, ingredients, preparation, information} = req.body;
+    const recipeId = await Recipe.create({
+      title,
+      user_id: 1,
+      chef_id,
+      ingredients: `{${ingredients}}`,
+      preparation: `{${preparation}}`,
+      information
+    });
 
-      let results = await Recipe.create(req.body, req.session.userId);
-      const recipeId = results.rows[0].id;
+    let fileId = 0;
 
-      for (file of req.files){
-        results = await File.create({...file});
-        await File.relate(results.rows[0].id, recipeId);
-      }
-
-    } catch (err){
-      console.error(err);
-      return res.render('admin/recipes/create', {
-        chefs,
-        recipe: req.body,
-        error: 'Something went wrong, try again later'
+    for (const [i, file] of req.files.entries()){
+      fileId = await File.create({
+        name: `${title}_image_${i}`,
+        path: file.path
       });
+      await Recipe.linkFile(recipeId, fileId);
     }
 
     return res.redirect(`/admin/recipes/${recipeId}`);
@@ -155,38 +136,32 @@ module.exports = {
   async put (req,res){
     let recipeId = null;
     let results = null;
-    try {
-      const recipe = await Recipe.find(req.body.id);
 
-      const enable = userRelated (recipe.user_id, req.session.userId, req.session.admin);
-      if(!enable) return res.render('admin_layout', {
-        error: 'Only admins or the recipe creator can edit a recipe'
-      });
+    recipeId = await Recipe.update({
+      title,
+      chef_id,
+      ingredients: `{${ingredients}}`,
+      preparation: `{${preparation}}`,
+      information
+    });
 
-      recipeId = await Recipe.update(req.body, req.session.userId);
-
-      if(req.files.length != 0){
-        for (file of req.files){
-          results = await File.create({...file});
-          await File.relate(results.rows[0].id, recipeId);
-        }
+    if(req.files.length != 0){
+      for (const [i, file] of req.files.entries()){
+        fileId = await File.create({
+          name: `${title}_image_${i}`,
+          path: file.path
+        });
+        await Recipe.linkFile(recipeId, fileId);
       }
+    }
 
-      if (req.body.removed_files){
-        const removedFiles = req.body.removed_files.split(',');
-        const lastIndex = removedFiles.length - 1;
-        removedFiles.splice(lastIndex, 1);
+    if (req.body.removed_files){
+      const removedFiles = req.body.removed_files.split(',');
+      removedFiles.pop();
 
-        for (fileId of removedFiles){
-          await File.delete(fileId);
-        }
+      for (const removedId of removedFiles){
+        await File.delete(removedId);
       }
-
-    } catch (err) {
-      console.error(err);
-      if(!enable) return res.render('admin_layout', {
-        error: 'something unpredictable happened, try again later!'
-      });
     }
 
     return res.redirect(`/admin/recipes/${recipeId}`);
@@ -194,18 +169,5 @@ module.exports = {
   },
   adminIndex (req, res){
     return res.redirect('/admin/recipes')
-  },
-  async adminRecipes (req, res){
-    let results = await Recipe.all();
-    let recipes = results.rows;
-
-    for (recipe of recipes){
-      results = await Recipe.files(recipe.id);
-      let srcEnd = results.rows[0].path.replace('public', '');
-      recipe.cardImage = `${req.protocol}://${req.headers.host}${srcEnd}`;
-    }
-
-    return res.render('admin/recipes/index', {recipes});
   }
-
 }

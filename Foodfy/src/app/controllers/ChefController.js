@@ -2,44 +2,41 @@ const Chef = require('../models/Chef');
 const Recipe = require('../models/Recipe');
 const File = require ('../models/File');
 
+
+
 module.exports = {
   async chefs (req, res){
-    let chefs = await Chef.all();
+    let avatarFile = null;
+    let chefs = await Chef.findAll();
 
     for (chef of chefs){
-      results = await Chef.files(chef.id);
-      let avatarFile = results.rows[0];
+      avatarFile = await Chef.avatar(chef.id);
 
-      if(avatarFile){
-        avatarFile.path.replace('public', '');
-        chef.avatar = `${req.headers.host}${avatarFile.path}`;
+      if(avatarFile){   
+        chef.avatar = avatarFile.path.replace('public', '');
       }
     }    
     
     return res.render('public/chefs', {chefs});
   },
   async show (req, res){
-
     const {id} = req.params;
 
-    results = await Chef.find(id);
-    const chef = results.rows[0];
+    const chef = await Chef.findOne(id);
 
-    results = await Chef.findRecipes(id);
-    let recipes = results.rows;
+    const recipes = await Recipe.find({filters: {WHERE: {chef_id: id}}});
 
-    results = await Chef.files(id);
-    let avatar = results.rows[0];
+    const avatar = await Chef.avatar(id);
 
     if (avatar){
-      avatar.path.replace('public', '');
-      chef.avatar = `${req.headers.host}${avatar.path}`;
+      chef.avatar = avatar.path.replace('public', '');
     }
 
+    let recipeImg = null;
+
     for (recipe of recipes){
-      results = await Recipe.files(recipe.id);
-      let srcEnd = results.rows[0].path.replace('public', '');
-      recipe.cardImage = `${req.protocol}://${req.headers.host}${srcEnd}`;
+      recipeImg = await Recipe.files(recipe.id);
+      recipe.cardImage = recipeImg[0].path.replace('public', '');
     }
 
     return res.render('public/chefs_show', {chef, recipes});
@@ -50,9 +47,10 @@ module.exports = {
 
     const enable = req.session.admin;
 
+    let avatarFile = null;
+
     for (chef of chefs){
-      results = await Chef.files(chef.id);
-      let avatarFile = results.rows[0];
+      avatarFile = await Chef.avatar(chef.id);
 
       if(avatarFile){
         avatarFile.path.replace('public', '');
@@ -67,8 +65,7 @@ module.exports = {
 
     const enable = req.session.admin;
 
-    results = await Chef.find(id);
-    const chef = results.rows[0];
+    const chef = await Chef.find(id);
 
     if (!chef){
       return res.render('admin_layout', {
@@ -76,11 +73,10 @@ module.exports = {
       });
     }
 
-    results = await Chef.findRecipes(id);
+    let results = await Chef.findRecipes(id);
     let recipes = results.rows;
 
-    results = await Chef.files(id);
-    let avatar = results.rows[0];
+    let avatar = await Chef.avatar(id);
 
     if (avatar){
       avatar.path.replace('public', '');
@@ -96,40 +92,47 @@ module.exports = {
     return res.render('admin/chefs/show', {chef, recipes, enable});
   },
   create (req, res){
-    return res.render('admin/chefs/create');
+    let error = null;
+    if (req.query) error = req.query.error;
+    return res.render('admin/chefs/create', {error});
   },
   async edit (req, res){
+    let error = null;
     const {id} = req.params;
+    if (req.query) error = req.query.error;
 
-    let results = await Chef.find(id);
-    const chef = results.rows[0];
-    
-    return res.render('admin/chefs/edit', {chef});
+    const chef = await Chef.find(id);
 
+    let avatar = await Chef.avatar(chef.id);
+
+    if (avatar){
+      avatar.path.replace('public', '');
+      chef.avatar = `${req.headers.host}${avatar.path}`;
+    }
+
+    return res.render('admin/chefs/edit', {chef, error});
   },
   async post (req, res){
-    
-
-    let results = await Chef.create(req.body);
-    const chefId = results.rows[0].id;
-
-    for (file of req.files){
-      results = await File.create({...file});
-      await File.relateChef(results.rows[0].id, chefId);
+    try {
+      let results = null;
+      const chefId = await Chef.create(req.body);
+  
+      for (file of req.files){
+        results = await File.create({...file});
+        await File.relateChef(results.rows[0].id, chefId);
+      }
+    } catch (err) {
+      console.error(err);
+      return res.render('admin/chefs/create', {
+        chef: req.body,
+        error: 'Something went wrong, try again later'
+      });
     }
 
     return res.redirect(`/admin/chefs/${chefId}`);
-
   },
   async put (req, res){
-    const keys = Object.keys(req.body);
-    for (key of keys){
-      if(req.body[key] == ""){
-        return res.send('Please, fill all fields');
-      }
-    }
-
-    if (req.files){
+    if (req.files.length >= 1){
       if(req.files.length > 1){
         return res.send('Please, send only one photo for the Avatar')
       } else if (req.files.length = 1){
@@ -140,11 +143,11 @@ module.exports = {
         }
       }
     }
-
-    const result = await Chef.update(req.body);
-    const chef = result.rows[0];
-
+  
+    const chef = await Chef.update(req.body);
     return res.redirect(`/admin/chefs/${chef.id}`);
-
+  },
+  async delete (req, res){
+    
   }
 }

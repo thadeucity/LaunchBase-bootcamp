@@ -27,6 +27,7 @@ header.admin{
   height: 80px;
   margin: 0;
   margin-bottom: 50px;
+  grid-template-columns: auto 1fr 20px;
 }
 
 header.admin nav a{
@@ -211,13 +212,23 @@ form .upload-grid .img-upload input{
   border: 0;
 }
 
-form .upload-grid .img-upload .material-icons,
+form .upload-grid .img-upload .material-icons{
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  font-size: 32px;
+  color: var(--colot-grey2);
+  display: block;
+  overflow: hidden;
+}
+
 form .avatar-upload .material-icons{
   margin: 0;
   padding: 0;
   cursor: pointer;
   font-size: 32px;
   color: var(--colot-grey2);
+  z-index: 10;
   display: block;
   overflow: hidden;
 }
@@ -292,10 +303,17 @@ form .avatar-upload{
   justify-content: center;
   background-size: cover;
   background-position: center;
+  overflow: hidden;
+}
+
+form .avatar-upload img{
+  position: absolute;
+  width: 100%;
+  object-fit: cover;
   transition: filter 0.3s ease-in-out;
 }
 
-form .avatar-upload.active:hover{
+form .avatar-upload:hover img{
   filter: grayscale(1) brightness(75%);
 }
 
@@ -304,10 +322,15 @@ form .avatar-upload .material-icons.active{
   color: white;
   transition: opacity  0.3s ease-in-out ;
   font-size: 40px;
+  z-index: 10;
 }
 
 form .avatar-upload:hover .material-icons.active{
   opacity: 1;
+}
+
+form .avatar-upload input{
+  z-index: 99;
 }
 
 /* =========================  USER FORMS  ========================= */
@@ -386,21 +409,25 @@ button.logout{
 }
 
 .card-user .manage-user{
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  grid-gap: 16px;
   margin-top: 16px;
 }
 
 .card-user .manage-user a{
   text-decoration: none;
   font-weight: bold;
-}
-
-.card-user .manage-user a:nth-child(1){
   color: var(--color-primary);
 }
 
-.card-user .manage-user a:nth-child(2){
-  margin-left: 16px;
+.card-user .manage-user button{
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: bold;
+  background-color: initial;
   color: var(--color-red);
+  cursor: pointer;
 }
 
 /* =====================  USER FORM ERROR  ======================= */

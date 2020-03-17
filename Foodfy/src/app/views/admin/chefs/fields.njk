@@ -1,16 +1,33 @@
 <div class="item">
   <div>Avatar Photo</div>
-    <div class="avatar-upload">
-      <i class="material-icons">add</i>
-      <input 
-        id="img-input"
-        type="file" 
-        name="avatar"
-        accept="image/*"
-        onchange="AvatarUpload.previewUpload(event)"
-      >
-    </div>
+    {% if chef.avatar %}
+      <div class="avatar-upload" style="background-image: src({{chef.avatar}})">
+        <img src="{{chef.avatar}}" alt="{{chef.name}} - avatar" id="avatar-img">
+        <i class="material-icons active">swap_horiz</i>
+        <input 
+          id="img-input"
+          type="file" 
+          name="avatar"
+          accept="image/*"
+          onchange="AvatarUpload.previewUpload(event)"
+        >
+      </div>
+    {% else %}
+      <div class="avatar-upload">
+        <img src="/img/blank-avatar.png" alt="Avatar image" id="avatar-img">
+        <i class="material-icons">add</i>
+        <input 
+          id="img-input"
+          type="file" 
+          name="avatar"
+          accept="image/*"
+          onchange="AvatarUpload.previewUpload(event)"
+        >
+      </div>
+    {% endif %}
+    
 </div>
+
 
 <div class="item">
   <div>Chef Name</div>

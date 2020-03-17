@@ -20,6 +20,7 @@ routes.post('/recipes',
 
 routes.put('/recipes',  
   multer.array("photos", 5), 
+  RecipeValidator.updateRecipe,
   recipes.put
 );
 

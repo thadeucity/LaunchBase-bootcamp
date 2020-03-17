@@ -7,16 +7,32 @@ const mailBuilder = require ('../../lib/emailBuilder')
 const User = require('../models/User');
 
 module.exports={
-  listUsers(req, res){
-    return res.render('admin/users/index');
+  async list(req, res){
+    if (!req.session.admin){
+      return res.redirect('/admin/profile')
+    }
+
+    let users = await User.all();
+    return res.render('admin/users/index', {users, admin:req.session.admin});
   },
   createForm(req,res){
     return res.render('admin/users/create');
   },
-  editForm(req,res){
-    return res.render('admin/users/edit');
+  async editForm(req,res){
+    const {id} = req.params;
+
+    const user = await User.findOne({where: { id }});
+
+    const userfilter = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      admin: user.is_admin
+    };
+
+    return res.render('admin/users/edit', {user: userfilter});
   },
-  async createUser(req,res){
+  async post(req,res){
     const { name, email } = req.body;
 
     if (req.body.admin){
@@ -67,10 +83,30 @@ module.exports={
       });
     }
   },
-  updateUser(req,res){
-    return res.render('admin/users/create');
+  async put(req,res){
+    const { name, email, id } = req.body;
+
+    if (req.body.admin){
+      isAdmin = true;
+    } else {
+      isAdmin = false;
+    }
+
+    try{
+
+      await User.update(id, {
+        name,
+        email,
+        is_admin: isAdmin
+      }); 
+
+    }catch(err){
+      console.error(err);
+    }
+
+    return res.redirect('/admin/users');
   },
-  deleteUser(req,res){
+  delete(req,res){
     return res.render('admin/users/create');
   },
   async changePassword(req, res){

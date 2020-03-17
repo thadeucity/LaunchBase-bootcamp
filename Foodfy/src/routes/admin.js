@@ -1,6 +1,8 @@
 const express = require ('express');
 const routes = express.Router();
 
+const ProfileController = require('../app/controllers/ProfileController');
+
 const { userVerified } = require('../app/middlewares/session');
 
 const users = require('./users');
@@ -11,6 +13,11 @@ const chefs = require('./admin-chefs');
 ////////////////////////////   SESSION   ////////////////////////////
 
 routes.use('/', session);
+
+////////////////////////////   PROFILE   ////////////////////////////
+
+routes.get('/profile', ProfileController.index);
+routes.put('/profile', ProfileController.put);
 
 /////////////////////////////   CHEFS   /////////////////////////////
 

@@ -1,141 +1,71 @@
 const db = require('../../config/db');
-const { date } = require('../../lib/utils');
+
+const Base = require('./Base');
+
+function find(params){
+  const {filters, search, paginate} = params;
+
+  let filterQuery = ``,
+      counterQuery = ``,
+      limitQuery = ``;
+
+  if (filters){
+    Object.keys(filters).map(key => {
+      filterQuery += `${key}`;
+  
+      Object.keys(filters[key]).map(field => {
+        filterQuery += ` recipes.${field} = '${filters[key][field]}'`;
+      });
+    });
+  }
+
+  if (search){
+    filterQuery = `
+    WHERE
+      recipes.title ILIKE '%${search}%'
+      OR chefs.name ILIKE '%${search}%'
+    `;
+  }
+
+  if (paginate){
+    counterQuery = `, (SELECT count(*) FROM recipes ${filterQuery}) AS total`;
+    limitQuery = `LIMIT ${paginate.limit} OFFSET ${paginate.offset}`;
+  }
+
+  const query = `
+    SELECT
+      recipes.*, chefs.name AS chef_name${counterQuery}
+    FROM
+      recipes
+    LEFT JOIN
+      chefs ON (recipes.chef_id = chefs.id)
+    ${filterQuery}
+    ORDER BY
+      recipes.updated_at DESC
+    ${limitQuery}
+  `;
+
+  return db.query(query);
+}
+
+Base.init({table: 'recipes'});
 
 module.exports = {
-  create(data, userId){
-    const QUERY = `
-      INSERT INTO recipes (
-        chef_id,
-        user_id,
-        title,
-        ingredients,
-        preparation,
-        information,
-        created_at 
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7)
-      RETURNING id
-    `;
-
-    const VALUES = [
-      data.chef_id,
-      userId,
-      data.title,
-      data.ingredients,
-      data.preparation,
-      data.information,
-      date(Date.now()).iso
-    ];
-
-    return db.query(QUERY, VALUES);
-
-  },
-  async update(data, userId){
-    const QUERY = `
-      UPDATE recipes SET
-        chef_id=($1),
-        user_id=($2),
-        title=($3),
-        ingredients=($4),
-        preparation=($5),
-        information=($6)
-      WHERE id = $7
-      RETURNING id
-    `;
-
-    const VALUES = [
-      data.chef_id,
-      userId, 
-      data.title,
-      data.ingredients,
-      data.preparation,
-      data.information,
-      data.id
-    ];
-  
-    const results = await db.query(QUERY, VALUES);
-    return results.rows[0].id;
-  },
-  async find(id){
-    const QUERY = `
-      SELECT
-        recipes.*, chefs.name AS chef_name
-      FROM
-        recipes
-      LEFT JOIN
-        chefs ON (recipes.chef_id = chefs.id)
-      WHERE
-        recipes.id = $1
-    `;
-
-    const results = await db.query(QUERY, [id]);
+  ...Base,
+  async findOne(id){
+    const results = await find({filters: {WHERE: {id}}});
     return results.rows[0];
   },
-  all(){
-    const QUERY = `
-      SELECT 
-        recipes.*, chefs.name as chef_name 
-      FROM
-        recipes
-      LEFT JOIN 
-        chefs ON (recipes.chef_id = chefs.id)
-      ORDER BY
-        recipes.updated_at DESC
-    `;
-
-    return db.query(QUERY)
-  },
-  mostViewed(limit){
-    const QUERY = `
-      SELECT recipes.*, chefs.name as chef_name 
-      FROM recipes
-      LEFT JOIN chefs ON (recipes.chef_id = chefs.id)
-      ORDER BY name
-      LIMIT $1
-    `;
-
-    return db.query(QUERY, [limit]);
-  },
-  paginate(params){
-    let filterQuery = ``;
-
-    if (params.filter){
-      filterQuery = `
-        WHERE
-          recipes.title ILIKE '%${params.filter}%'
-          OR chefs.name ILIKE '%${params.filter}%'
-      `;
-    }
-
-    let counterQuery =
-      `(SELECT count(*) FROM recipes ${filterQuery}) AS total`;
-
-    let QUERY = `
-      SELECT
-        recipes.*, chefs.name as chef_name, ${counterQuery}
-      FROM
-        recipes
-      LEFT JOIN
-        chefs ON (recipes.chef_id = chefs.id)
-      ${filterQuery}
-      ORDER BY 
-        recipes.updated_at DESC
-      LIMIT ${params.limit} OFFSET ${params.offset}
-    `;
-
-    return db.query(QUERY);
-  },
-  async chefsList(){
-    const QUERY = `
-      SELECT name, id
-      from chefs
-      ORDER BY name
-    `;
-
-    const results = await db.query(QUERY);
+  async findAll(){
+    const results = await find({});
     return results.rows;
   },
-  files(id){
-    const QUERY = `
+  async find(params){
+    const results = await find(params);
+    return results.rows;
+  },
+  async files(id){
+    const query = `
       SELECT 
         files.*, recipe_files.recipe_id
       FROM
@@ -146,6 +76,7 @@ module.exports = {
         recipe_id = $1 
     `;
 
-    return db.query(QUERY, [id]);
+    const results = await db.query(query, [id]);
+    return results.rows;
   }
 };
