@@ -48,6 +48,7 @@ module.exports = {
   async findOne(id){
     const results = await find({ WHERE: {id} });
     return results.rows[0];
+
   },
   async avatar(id){
     const QUERY = `

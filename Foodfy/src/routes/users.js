@@ -12,8 +12,8 @@ routes.get('/', UserController.list);
 routes.get('/create', adminOnly, UserController.createForm);
 routes.get('/:id/edit', adminOnly, UserController.editForm);
 
-routes.post('/', adminOnly, UserValidator.post, UserController.post);
-routes.put('/', adminOnly, UserController.put);
-routes.delete('/', adminOnly, UserController.delete);
+routes.post('/', adminOnly, UserValidator.createUser, UserController.post);
+routes.put('/', adminOnly, UserValidator.editUser, UserController.put);
+routes.delete('/', adminOnly, UserValidator.deleteUser, UserController.delete);
 
 module.exports = routes;

@@ -1,0 +1,65 @@
+{% macro main( recipe , files )%}
+
+  <div class="img-container highlight" onclick="RecipeGallery.showMore()">
+      <div class="card-image"> <img src="{{files[0].src}}" alt=""></div>  
+  </div>
+  <div class="mini-gallery">
+    {% for image in files %}
+      <img 
+        src="{{image.src}}" 
+        alt="{{image.name}}"
+        {% if loop.index0 == 0 %}
+            class="active"
+        {% endif %}
+        onclick="RecipeGallery.setImage(event)"
+      >
+    {% endfor %}
+  </div> 
+
+  <div class="recipe-info">
+    <h1>{{recipe.title}}</h1>
+    <p class="author">by {{recipe.chef_name}}</p>
+
+    <div class="recipe-section">
+      <div class="recipe-section-head">
+        <h2>Ingredients</h2>
+        <p class="toggle">hide</p>
+      </div>
+      <div class="recipe-section-info active">
+        <ul>
+          {% for ingredient in recipe.ingredients %}
+            <li>{{ingredient}}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <div class="recipe-section">
+      <div class="recipe-section-head">
+        <h2>How to make it</h2>
+        <p class="toggle">hide</p>
+      </div>
+      <div class="recipe-section-info active">
+        <ul>
+          {% for step in recipe.preparation %}
+            <li>{{step}}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    {% if recipe.information %}
+    <div class="recipe-section">
+      <div class="recipe-section-head">
+        <h2>Aditional Info</h2>
+        <p class="toggle">hide</p>
+      </div>
+      <div class="recipe-section-info active">
+        <p>{{recipe.information}}</p>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+
+{% endmacro %}

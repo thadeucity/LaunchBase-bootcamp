@@ -5,6 +5,7 @@ const mailer = require('../../config/mailer');
 const mailBuilder = require ('../../lib/emailBuilder')
 
 const User = require('../models/User');
+const Recipe = require('../models/Recipe');
 
 module.exports={
   async list(req, res){
@@ -12,7 +13,7 @@ module.exports={
       return res.redirect('/admin/profile')
     }
 
-    let users = await User.all();
+    let users = await User.findAll();
     return res.render('admin/users/index', {users, admin:req.session.admin});
   },
   createForm(req,res){
@@ -21,7 +22,7 @@ module.exports={
   async editForm(req,res){
     const {id} = req.params;
 
-    const user = await User.findOne({where: { id }});
+    const user = await User.find({where: { id }});
 
     const userfilter = {
       id: user.id,
@@ -33,21 +34,16 @@ module.exports={
     return res.render('admin/users/edit', {user: userfilter});
   },
   async post(req,res){
-    const { name, email } = req.body;
-
-    if (req.body.admin){
-      isAdmin = true;
-    } else {
-      isAdmin = false;
-    }
-
-    let data = {
-      ...req.body,
-      password: crypto.randomBytes(5).toString('hex'),
-      isAdmin
-    }
-
     try{
+      const { name, email } = req.body;
+
+      if (req.body.admin){
+        is_admin = true;
+      } else {
+        is_admin = false;
+      }
+  
+      let password = crypto.randomBytes(5).toString('hex');
 
       await mailer.sendMail({
         to: email,
@@ -55,13 +51,26 @@ module.exports={
         subject: `Welcome to Foodfy - ${name}`,
         text: mailBuilder.welcomeEmail({
           name, 
-          password: data.password,
+          password,
           textOnly: true
         }),
         html: mailBuilder.welcomeEmail({
           name,
-          password: data.password
+          password
         }),
+      });
+
+      password = await hash(password, 8);
+
+      const userId = await User.create({
+        name,
+        email,
+        is_admin,
+        password
+      });
+
+      return res.render('admin/users/index', {
+        success: `Congratulations the user ${name} was successfully created!`
       });
 
     } catch(err){
@@ -71,17 +80,6 @@ module.exports={
       });
     }
 
-    const results = await User.create(data);
-
-    if(results.error){
-      return res.render('admin/users/create', {
-        error: `Something went wrong, the system was unable to create the user try again later!`
-      });
-    } else {
-      return res.render('admin/users/index', {
-        success: `Congratulations the user ${name} was successfully created!`
-      });
-    }
   },
   async put(req,res){
     const { name, email, id } = req.body;
@@ -106,33 +104,28 @@ module.exports={
 
     return res.redirect('/admin/users');
   },
-  delete(req,res){
-    return res.render('admin/users/create');
-  },
   async changePassword(req, res){
     try{
-      const id = req.session.userId;
+      const {id} = req.user;
 
       password = await hash(req.body.new_password, 8);
 
       if(req.session.verified){
         await User.update(id, {password}); 
       } else{
-        await User.update(id, {password, verified:true});
-        req.session.verified = true;
+        await User.update(id, {password, is_verified:true});
       }
+
+      req.session.destroy();
+
+      return res.render('session/login', {
+        user: req.body,
+        success: "Your password was updated!"
+      });
 
     } catch (err){
       console.error(err);
-      return res.render('session/change-password', {
-        error: 'Something went wrong, try again later'
-      });
     }
-
-    return res.render('session/login', {
-      user: req.body,
-      success: "Your password was updated!"
-    });
 
   },
   async resetPassword(req,res){
@@ -154,5 +147,25 @@ module.exports={
       success: "Your password was updated!"
     });
 
+  },
+  async delete(req,res){
+    const {id} = req.body;
+
+    const filters = {
+      WHERE: {user_id:id}
+    }
+    
+    const userRecipes = await Recipe.find({filters});
+
+    recipesPromise = userRecipes.map(recipe => {
+      return Recipe.update(recipe.id,{
+        user_id : req.session.userId      
+      })
+    });
+
+    await Promise.all(recipesPromise);
+    await User.delete(id);
+
+    return res.redirect('/admin/users');
   }
 }

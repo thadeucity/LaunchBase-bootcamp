@@ -1,5 +1,3 @@
-const Intl = require ('intl');
-
 module.exports = {
   age(timestamp) {
     const today = new Date();

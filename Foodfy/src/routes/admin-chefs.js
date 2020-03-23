@@ -15,17 +15,23 @@ routes.get('/chefs/:id', ChefController.adminShow);
 routes.get('/chefs/:id/edit', adminOnly, ChefController.edit);
 
 routes.post('/chefs', 
-adminOnly,
-multer.array("avatar", 1), 
-ChefValidator.createChef,
-ChefController.post
+  adminOnly,
+  multer.array("avatar", 1), 
+  ChefValidator.createChef,
+  ChefController.post
 );
 
 routes.put('/chefs', 
-adminOnly, 
-multer.array("avatar", 1), 
-ChefValidator.updateChef,
-ChefController.put
+  adminOnly, 
+  multer.array("avatar", 1), 
+  ChefValidator.updateChef,
+  ChefController.put
+);
+
+routes.delete('/chefs',
+  adminOnly,
+  ChefValidator.deleteChef,
+  ChefController.delete
 );
 
 module.exports = routes;

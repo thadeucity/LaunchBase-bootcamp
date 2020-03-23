@@ -34,3 +34,8 @@
 .messages.alert{
   background-color: #e2c20a;
 }
+
+#error-card.admin{
+  margin-top: 120px;
+  background-color:   #ddd;
+}

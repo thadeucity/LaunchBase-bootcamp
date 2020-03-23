@@ -97,7 +97,8 @@ header form button{
 
 /* ------- Banner ------- */
 
-#index-banner{
+#index-banner,
+#error-card{
   display: grid;
   grid-template-columns: 1fr 1fr;
   background-color: var(--color-banner);
@@ -106,12 +107,27 @@ header form button{
   margin-bottom: 60px;
 }
 
-#index-banner .info{
+#error-card{
+  grid-template-columns: 2fr 1fr;
+}
+
+#index-banner .info,
+#error-card .info{
   align-self: center;
   padding: 0 60px;
 }
 
-#index-banner .image{
+#error-card .info{
+  font-size: 16px;
+}
+
+#error-card a{
+  text-decoration: none;
+  color: black;
+}
+
+#index-banner .image,
+#error-card .image{
   align-self: end;
   justify-self: center;
 }
@@ -274,6 +290,16 @@ main{
   padding-top: 30%;
   border-radius: 15px;
   margin-bottom: 50px;
+}
+
+.full-recipe .img-container.highlight{
+  transition: padding 400ms ease-in-out;
+  cursor: zoom-in;
+}
+
+.full-recipe .img-container.highlight.large{
+  padding-top: 80%;
+  cursor: zoom-out;
 }
 
 .recipe-info h1,

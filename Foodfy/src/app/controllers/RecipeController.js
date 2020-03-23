@@ -1,6 +1,12 @@
+const { unlinkSync } = require('fs');
+
 const Recipe = require('../models/Recipe');
 const Chef = require('../models/Chef');
 const File = require ('../models/File');
+
+function isEditable (recipeOwner, user, adminStatus){
+  return (recipeOwner == user || adminStatus) ? true : false;
+}
 
 module.exports = {
   async index (req, res){
@@ -65,16 +71,27 @@ module.exports = {
 
     return res.render('public/recipe_show', {recipe, files});
   },
-
+  //////////    ADMIN CONTROLLERS    //////////
   async adminRecipes (req, res){
-    const recipes = await Recipe.findAll();
+    const filter = req.query.filter;
+    let recipes = [];
+    let filtered = false;
+
+    if (filter == 'self'){
+      filters = { WHERE: {user_id: req.session.userId }};
+      recipes = await Recipe.find({filters});
+      filtered = true;
+
+    } else {
+      recipes = await Recipe.findAll();
+    }
 
     for (recipe of recipes){
       recipeImg = await Recipe.files(recipe.id);
       recipe.cardImage = recipeImg[0].path.replace('public', '');
     }
 
-    return res.render('admin/recipes/index', {recipes});
+    return res.render('admin/recipes/index', {recipes, filtered});
   },
   async adminShow (req, res){
     const {id} = req.params;
@@ -88,11 +105,17 @@ module.exports = {
       name: `${recipe.title} -image_${index}`
     }));
 
+    const editable = isEditable(
+      recipe.user_id,
+      req.session.userId,
+      req.session.admin
+    );
 
-    return res.render('admin/recipes/show', {recipe, files});
+    return res.render('admin/recipes/show', {recipe, files, editable});
   },
   async create (req, res){
     const chefs = await Chef.findAll();
+    
     return res.render('admin/recipes/create', {chefs});
   },
   async edit (req, res){
@@ -108,23 +131,27 @@ module.exports = {
       name: `${recipe.title} -image_${index}`
     }));
 
-    return res.render('admin/recipes/edit', { recipe, chefs, files });
+    const editable = isEditable(
+      recipe.user_id,
+      req.session.userId,
+      req.session.admin
+    );
+
+    return res.render('admin/recipes/edit', { recipe, chefs, files, editable });
   },
   async post (req, res){
     let {title, chef_id, ingredients, preparation, information} = req.body;
     const recipeId = await Recipe.create({
       title,
-      user_id: 1,
+      user_id: req.session.userId,
       chef_id,
-      ingredients: `{${ingredients}}`,
-      preparation: `{${preparation}}`,
+      ingredients,
+      preparation,
       information
     });
 
-    let fileId = 0;
-
     for (const [i, file] of req.files.entries()){
-      fileId = await File.create({
+      const fileId = await File.create({
         name: `${title}_image_${i}`,
         path: file.path
       });
@@ -133,15 +160,15 @@ module.exports = {
 
     return res.redirect(`/admin/recipes/${recipeId}`);
   },
-  async put (req,res){
-    let recipeId = null;
-    let results = null;
+  async put (req, res){
+    let {title, chef_id, ingredients, preparation, information} = req.body;
+    let recipeId = req.body.id;
 
-    recipeId = await Recipe.update({
+    await Recipe.update(recipeId,{
       title,
       chef_id,
-      ingredients: `{${ingredients}}`,
-      preparation: `{${preparation}}`,
+      ingredients,
+      preparation,
       information
     });
 
@@ -160,14 +187,35 @@ module.exports = {
       removedFiles.pop();
 
       for (const removedId of removedFiles){
-        await File.delete(removedId);
+        try {
+          const file = await File.findOne(removedId);
+          unlinkSync(file.path);
+          await File.delete(removedId);
+        } catch (err) {
+          console.error(err);
+        }
       }
+
     }
 
     return res.redirect(`/admin/recipes/${recipeId}`);
 
   },
-  adminIndex (req, res){
-    return res.redirect('/admin/recipes')
+  async delete(req, res){
+    const files = await Recipe.files(req.body.id);
+
+    try{
+      const filesPromise = files.map( file => {
+        File.delete(file.id);
+        unlinkSync(file.path);
+      });
+      await Promise.all(filesPromise);
+    }catch (err){
+      console.error(err);
+    }
+
+    await Recipe.delete(req.body.id);
+    
+    return res.redirect(`/admin/recipes`);
   }
 }

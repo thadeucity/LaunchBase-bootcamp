@@ -52,6 +52,11 @@ header.admin img{
   margin-bottom: 30px;
 }
 
+.admin-top-bar.recipe-bar{
+  grid-template-columns: 1fr auto auto;
+  grid-gap: 16px;
+}
+
 .admin-top-bar h1{
   font-size: 24px;
 }
@@ -228,7 +233,7 @@ form .avatar-upload .material-icons{
   cursor: pointer;
   font-size: 32px;
   color: var(--colot-grey2);
-  z-index: 10;
+  z-index: 20;
   display: block;
   overflow: hidden;
 }
@@ -301,14 +306,13 @@ form .avatar-upload{
   display: flex;
   align-items: center;
   justify-content: center;
-  background-size: cover;
-  background-position: center;
   overflow: hidden;
 }
 
 form .avatar-upload img{
   position: absolute;
   width: 100%;
+  height: 100%;
   object-fit: cover;
   transition: filter 0.3s ease-in-out;
 }
@@ -335,7 +339,8 @@ form .avatar-upload input{
 
 /* =========================  USER FORMS  ========================= */
 
-.admin-top-bar.user a{
+.admin-top-bar.user a,
+.admin-top-bar a.filter-button{
   background-color: #8A8A8A;
 }
 

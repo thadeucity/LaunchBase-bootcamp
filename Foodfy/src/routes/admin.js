@@ -2,8 +2,9 @@ const express = require ('express');
 const routes = express.Router();
 
 const ProfileController = require('../app/controllers/ProfileController');
+const UserValidator = require('../app/validators/user');
 
-const { userVerified } = require('../app/middlewares/session');
+const { userVerified, usersOnly } = require('../app/middlewares/session');
 
 const users = require('./users');
 const session = require('./session');
@@ -16,8 +17,10 @@ routes.use('/', session);
 
 ////////////////////////////   PROFILE   ////////////////////////////
 
-routes.get('/profile', ProfileController.index);
-routes.put('/profile', ProfileController.put);
+routes.get('/', (req,res) => res.redirect('/admin/profile'));
+
+routes.get('/profile', usersOnly, ProfileController.index);
+routes.put('/profile', usersOnly, UserValidator.putProfile, ProfileController.put);
 
 /////////////////////////////   CHEFS   /////////////////////////////
 

@@ -111,6 +111,24 @@ function clickCard(){
   }
 }
 
+const RecipeGallery = {
+  highlightContainer: document.querySelector('.img-container.highlight'),
+  highlightImg: document.querySelector('.highlight img'),
+  previews: document.querySelectorAll('.mini-gallery img'),
+  setImage(e) {
+    const {target} = e;
+
+    RecipeGallery.previews.forEach(preview => preview.classList.remove('active'));
+    target.classList.add('active');
+
+    RecipeGallery.highlightImg.src = target.src;
+
+  },
+  showMore(){
+    RecipeGallery.highlightContainer.classList.toggle('large');
+  }
+}
+
 if(recipeSections) toggleSections();
 
 if (cards && !(currentPage.includes('admin'))) clickCard();

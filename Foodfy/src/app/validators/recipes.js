@@ -1,59 +1,51 @@
-const Recipe = require('../models/Recipe');
+const checkForm = require('../services/checkForm');
+
+const Chef = require('../models/Chef');
 
 async function createRecipe (req, res, next) {
-  let chefs = null;
-
-  const keys = Object.keys(req.body);
-  for (key of keys){
-    if(req.body[key] == ""){
-      chefs = await Recipe.chefsList();
+  try {
+    let error = checkForm.images(req.files, true);
+    if (error) {
+      const chefs = await Chef.findAll();
       return res.render('admin/recipes/create', {
         chefs,
         recipe: req.body,
-        error: 'Please fill all fields'
+        error
       });
     }
+
+    error = checkForm.allFields(req.body, req.files);
+    if (error) return res.render(`admin/errors/invalid-form`, {error});
+
+    next();
+
+  } catch (err) {
+    console.error(err);
   }
 
-  
-
-  if(req.files.length == 0){
-    chefs = await Recipe.chefsList();
-    return res.render('admin/recipes/create', {
-      chefs,
-      recipe: req.body,
-      error: 'Please upload at least one photo'
-    });
-
-  } else if(req.files.length > 5){
-    chefs = await Recipe.chefsList();
-    return res.render('admin/recipes/create', {
-      chefs,
-      recipe: req.body,
-      error: 'Please upload less than 5 photos'
-    });
-  }
-
-  next();
 }
 
 async function updateRecipe (req, res, next){
-  let chefs = null;
-
-  const keys = Object.keys(req.body);
-  for (key of keys){
-    if(req.body[key] == "" && key != "removed_files"){
-      return res.render('admin/recipes/edit', {
+  try {
+    let error = checkForm.images(req.files);
+    if (error) {
+      const chefs = await Chef.findAll();
+      return res.render('admin/recipes/create', {
         chefs,
         recipe: req.body,
-        error: 'Please fill all fields'
+        error
       });
     }
+
+    error = checkForm.allFields(req.body, req.files);
+    if (error) return res.render(`admin/errors/invalid-form`, {error});
+
+    next();
+
+  } catch (err) {
+    console.error(err);
   }
-
-  next();
 }
-
 
 module.exports = {
  createRecipe,

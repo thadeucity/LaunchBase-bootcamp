@@ -176,18 +176,4 @@ const AvatarUpload = {
   }
 }
 
-const RecipeGallery = {
-  highlightImg: document.querySelector('.highlight img'),
-  previews: document.querySelectorAll('.mini-gallery img'),
-  setImage(e) {
-    const {target} = e;
-
-    RecipeGallery.previews.forEach(preview => preview.classList.remove('active'));
-    target.classList.add('active');
-
-    RecipeGallery.highlightImg.src = target.src;
-
-  }
-}
-
 if(moreFields && removeFields) manageFields();

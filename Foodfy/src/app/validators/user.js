@@ -1,71 +1,130 @@
+const Messages = require ('../../lib/messages');
+
+const checkForm = require('../services/checkForm');
+
 const User = require ('../models/User');
 const { compare } = require('bcryptjs');
 
-function checkAllFields(body){
-  //check if has all fields
-  const keys = Object.keys(body);
-  for (key of keys){
-    if(body[key] == "") {
-      return 'Please fill all fields!';
-    }
-  }
-}
+//////////////////  EXPORTABLE FUNCTIONS  //////////////////
 
-function isEmailValid(value){
-  const mailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-
-  if (!value.match(mailPattern)) {
-    return 'Invalid Email!';
-  }
-}
-
-function isNameValid(value){
-  const namePattern = /^[a-z]+(([',. -][a-z ])?[a-z ]*)*$/ig;
-  const trimmed = value.replace(/\s/g,'');
-  if(trimmed.length<4){
-    return 'The name should be at least 3 characters long';
-  }
-  if(!namePattern.test(value)){
-    return 'The name cannot have special characters or numbers';
-  }
-}
-
-async function post(req,res,next){
+async function createUser(req,res,next){
   const {name, email} = req.body;
   const baseError = 'Unable to save user! ';
 
   // Check if the Form is complete
-  const fillAllFields = checkAllFields(req.body);
-  if (fillAllFields){
+  let error = checkForm.allFields(req.body, req.files);
+  if (error){
     return res.render("admin/users/create", {
       user: req.body,
-      error: baseError + fillAllFields
+      error: baseError + error
     });
   }
 
-  const user = await User.findOne({
-    where: { email }
-  });
-  if (user) return res.render("admin/users/create", {
-    user: req.body,
-    error: baseError + 'Someone is already registered with this e-mail'
-  });
-
-  //Check if the User entered a valid Username
-  const invalidName = isNameValid(name);
-  if (invalidName){
+  error = await checkForm.name(name, null, null, 'user');
+  if (error) {
     return res.render("admin/users/create", {
       user: req.body,
-      error: baseError + invalidName
+      error: baseError + error
     });
   }
 
-  // Check if the User entered a valid email address
-  const invalidEmail = isEmailValid(email);
-  if (invalidEmail){
+  error = await checkForm.email(email);
+  if (error) {
     return res.render("admin/users/create", {
       user: req.body,
-      error: baseError + invalidEmail
+      error: baseError + error
+    });
+  }
+
+  next();
+}
+
+async function editUser(req,res,next){
+  const {name, email, id} = req.body;
+  const baseError = 'Unable to update user! ';
+
+  // Check if the Form is complete
+  let error = checkForm.allFields(req.body, req.files);
+  if (error){
+    return res.render("admin/users/create", {
+      user: req.body,
+      error: baseError + error
+    });
+  }
+
+  error = await checkForm.name(name, null, id, 'user');
+  if (error) {
+    return res.render("admin/users/create", {
+      user: req.body,
+      error: baseError + error
+    });
+  }
+
+  error = await checkForm.email(email, id);
+  if (error) {
+    return res.render("admin/users/create", {
+      user: req.body,
+      error: baseError + error
+    });
+  }
+
+  next();
+}
+
+async function putProfile (req,res,next){
+  const {name, email, password} = req.body,
+        id = req.session.userId,
+        baseError = 'Unable to update your profile! ';
+
+  let error = checkForm.allFields(req.body, req.files);
+  if (error){
+    return res.render("admin/users/profile", {
+      user: req.body,
+      error: baseError + error
+    });
+  }
+
+  error = await checkForm.name(name, null, id, 'user');
+  if (error) {
+    return res.render("admin/users/create", {
+      user: req.body,
+      error: baseError + error
+    });
+  }
+
+  error = await checkForm.email(email, id);
+  if (error) {
+    return res.render("admin/users/create", {
+      user: req.body,
+      error: baseError + error
+    });
+  }
+
+  const user = await User.findOne(id);
+
+  const passed = await compare(password, user.password);
+
+  if (!passed){
+    error = Messages.fromParams('error', 600); // Wrong password
+    return res.render("admin/users/profile", {
+      user: req.body,
+      error: baseError + error
+    });
+  }
+
+  req.user = user;
+
+  next();
+}
+
+async function deleteUser (req,res,next){
+  const id = req.body.id,
+        baseError = 'Unable to delete User! ';
+  
+  if (req.session.userId == id){
+    return res.render("admin/users/index", {
+      user: req.body,
+      error: baseError + Messages.fromParams('error', 306) // cannot delete yourself
     });
   }
 
@@ -73,5 +132,8 @@ async function post(req,res,next){
 }
 
 module.exports = {
-  post
+  createUser,
+  editUser,
+  putProfile,
+  deleteUser
 }

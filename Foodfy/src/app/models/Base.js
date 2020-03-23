@@ -21,6 +21,14 @@ function find(filters, table) {
   }
 }
 
+function valuesString(size){
+  let str = ``;
+  for (let i = 0; i<size; i++){
+    str += `$${i+1},`
+  }
+  return `${str.slice(0,-1)}`;
+}
+
 const Base = {
   init({ table }) {
     if(!table) throw new Error('Invalid Params');
@@ -36,16 +44,16 @@ const Base = {
 
       Object.keys(fields).map(key => {
         keys.push(key);
-        values.push(`'${fields[key]}'`);
+        values.push(fields[key]);
       });
 
       const query = `INSERT INTO ${this.table}
         (${keys.join(',')})
-        VALUES (${values.join(',')})
+        VALUES (${valuesString(values.length)})
         RETURNING id
       `
 
-      const results = await db.query(query);
+      const results = await db.query(query,values);
       return results.rows[0].id
 
     } catch (error){
@@ -55,9 +63,11 @@ const Base = {
   async update (id, fields){
     try{
       let update = [];
+      let values = [];
 
-      Object.keys(fields).map(key => {
-        update.push(`${key} = '${fields[key]}'`);
+      Object.keys(fields).map((key, index) => {
+        update.push(`${key} = ($${index+1})`);
+        values.push(fields[key]);
       });
   
       let query = `UPDATE ${this.table} SET
@@ -65,12 +75,15 @@ const Base = {
         WHERE id = ${id}
       `;
   
-      const results = await db.query(query);
-      return results.rows[0].id;
+      return await db.query(query,values);
       
     }catch (err){
       console.error(err);
     }
+  },
+  async find (filters){
+    const results = await find(filters, this.table);
+    return results.rows[0];
   },
   async findOne (id){
     const results = await find({ where: {id} }, this.table);

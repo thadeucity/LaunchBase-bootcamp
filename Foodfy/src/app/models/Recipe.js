@@ -5,6 +5,8 @@ const Base = require('./Base');
 function find(params){
   const {filters, search, paginate} = params;
 
+  let orderBy = `created_at`;
+
   let filterQuery = ``,
       counterQuery = ``,
       limitQuery = ``;
@@ -25,6 +27,7 @@ function find(params){
       recipes.title ILIKE '%${search}%'
       OR chefs.name ILIKE '%${search}%'
     `;
+    orderBy = `updated_at`;
   }
 
   if (paginate){
@@ -41,7 +44,7 @@ function find(params){
       chefs ON (recipes.chef_id = chefs.id)
     ${filterQuery}
     ORDER BY
-      recipes.updated_at DESC
+      recipes.${orderBy} DESC
     ${limitQuery}
   `;
 

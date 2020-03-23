@@ -106,3 +106,15 @@ ADD CONSTRAINT recipe_files_file_id_fkey
 FOREIGN KEY ("file_id")
 REFERENCES "files" ("id")
 ON DELETE CASCADE;
+
+ALTER TABLE "chef_files"
+DROP CONSTRAINT chef_files_file_id_fkey,
+ADD CONSTRAINT chef_files_file_id_fkey
+FOREIGN KEY ("file_id")
+REFERENCES "files" ("id")
+ON DELETE CASCADE;
+
+-- Populate Chefs table with standart Chef
+INSERT INTO chefs(name) VALUES ('Foodfy');
+INSERT INTO files(name, path) VALUES ('Foodfy_avatar', 'public/img/foodfy-avatar.png');
+INSERT INTO chef_files(chef_id, file_id) VALUES ('1', '1');

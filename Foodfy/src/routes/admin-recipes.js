@@ -3,25 +3,36 @@ const routes = express.Router();
 
 const multer = require ('../app/middlewares/multerRecipes');
 
-const recipes = require('../app/controllers/RecipeController');
+const { userRestricted } = require('../app/middlewares/session');
+
+const RecipeController = require('../app/controllers/RecipeController');
 const RecipeValidator = require('../app/validators/recipes');
 
-routes.get('/', recipes.adminIndex);
-routes.get('/recipes', recipes.adminRecipes);
-routes.get('/recipes/create', recipes.create);
-routes.get('/recipes/:id', recipes.adminShow);
-routes.get('/recipes/:id/edit', recipes.edit);
+routes.get('/recipes', RecipeController.adminRecipes);
+routes.get('/recipes/create', RecipeController.create);
+routes.get('/recipes/:id', RecipeController.adminShow);
+
+routes.get('/recipes/:id/edit',
+  userRestricted,
+  RecipeController.edit
+);
 
 routes.post('/recipes', 
   multer.array("photos", 5),
   RecipeValidator.createRecipe,
-  recipes.post
+  RecipeController.post
 );
 
-routes.put('/recipes',  
-  multer.array("photos", 5), 
+routes.put('/recipes',
+  userRestricted,
+  multer.array("photos", 5),
   RecipeValidator.updateRecipe,
-  recipes.put
+  RecipeController.put
+);
+
+routes.delete('/recipes',
+  userRestricted,
+  RecipeController.delete
 );
 
 module.exports = routes;

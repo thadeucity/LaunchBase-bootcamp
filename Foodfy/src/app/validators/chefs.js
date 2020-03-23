@@ -1,40 +1,70 @@
-function createChef(req, res, next){
-  const keys = Object.keys(req.body);
-  for (key of keys){
-    if(req.body[key] == ""){
-      let error = 'Please fill all fields';
-      return res.redirect(`/admin/chefs/create?error=${error}`);
-    }
-  }
+const checkForm = require('../services/checkForm');
 
-  if(req.files.length == 0){
-    return res.send('Please, send at least one image for the Avatar')
-  } else if(req.files.length > 1){
-    return res.send('Please, send only one photo for the Avatar')
+const { unlinkSync } = require('fs');
+
+const errorPage = 'admin/errors/invalid-form';
+
+async function createChef(req, res, next){
+  try {
+    let error = checkForm.avatar(req.files, true);
+    if (error) return res.render('admin/chefs/create', {
+      chef: req.body,
+      error
+    });
+
+    error = checkForm.allFields(req.body, req.files);
+    if (error) return res.render(errorPage, {error});
+  
+    error = await checkForm.name(req.body.name, req.files, null, 'chef');
+    if (error) return res.render(errorPage, {error});
+  
+    next();   
+  } catch (err) {
+    console.error(err)
   }
-  next();
 }
 
-function updateChef(req, res, next){
-  const keys = Object.keys(req.body);
-  for (key of keys){
-    if(req.body[key] == ""){
-      let error = 'Please fill all fields';
-      return res.redirect(`/admin/chefs/${req.body.id}/edit?error=${error}`);
+async function updateChef(req, res, next){
+  try {
+    if (req.body.id == 1){
+      let error = 300 // Foodfy chef cannot be edited or deleted
+      req.files.map(file => unlinkSync(file.path));
+      return res.redirect(`/admin/chefs/1/edit?error=${error}`);
     }
+
+    let error = checkForm.allFields(req.body, req.files);
+    if (error) return res.render(errorPage, {error});
+  
+    error = checkForm.avatar(req.files);
+    if (error) return res.render(errorPage, {error});
+  
+    error = await checkForm.name(req.body.name, req.files, req.body.id, 'chef');
+    if (error) return res.render(errorPage, {error});
+  
+    next();
+    
+  } catch (err) {
+    console.error(err);
   }
 
-  if (req.files){
-    if(req.files.length > 1){
-      let error = 'Please send only one photo';
-      return res.redirect(`/admin/chefs/${req.body.id}/edit?error=${error}`);
+}
+
+function deleteChef(req, res, next){
+  try {
+    if (req.body.id == 1){
+      let error = 300 // Foodfy chef cannot be edited or deleted
+      return res.redirect(`/admin/chefs/1/edit?error=${error}`);
     }
+  
+    next();
+  } catch (err) {
+    console.error(err);
   }
-  next();
 }
 
 
 module.exports = {
   createChef,
-  updateChef
+  updateChef,
+  deleteChef
 }
