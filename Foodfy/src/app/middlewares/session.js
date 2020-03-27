@@ -21,10 +21,10 @@ function adminOnly(req, res, next){     ////////////////////////////////////////
 }
 
 function userRestricted(req, res, next){
-  const recipe = Recipe.findOne(req.body.id);
+  const recipe = Recipe.findOne(req.params.id);
   if ( !req.session.admin || req.session.userId != recipe.user_id ){
     let error = 203; // Only admins or the user that created the recipe ...
-    return res.redirect(`/admin/recipes/${req.body.id}?error=${error}`);
+    return res.redirect(`/admin/recipes/${req.params.id}?error=${error}`);
   }
   next();
 }

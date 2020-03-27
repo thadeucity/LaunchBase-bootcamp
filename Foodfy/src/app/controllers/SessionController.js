@@ -67,7 +67,7 @@ module.exports={
 
     } catch(err){
       return res.render('session/forgot-password', {
-        error: `Something went wrong, the system was unable to send the recover password email, try again later!`
+        error: `Something went wrong, the system was unable to send the password recovery email, try again later!`
       });
     }
 

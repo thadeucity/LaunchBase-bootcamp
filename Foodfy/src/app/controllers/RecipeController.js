@@ -1,5 +1,7 @@
 const { unlinkSync } = require('fs');
 
+const LoadContentService = require ('../services/LoadContentService');
+
 const Recipe = require('../models/Recipe');
 const Chef = require('../models/Chef');
 const File = require ('../models/File');
@@ -16,29 +18,19 @@ module.exports = {
       offset: 0
     }
 
-    const recipes = await Recipe.find({paginate});
-
-    for (recipe of recipes){
-      recipeImg = await Recipe.files(recipe.id);
-      recipe.cardImage = recipeImg[0].path.replace('public', '');
-    }
+    const recipes = await LoadContentService.load('recipes', {paginate});
 
     return res.render('public/index', {recipes});
   },
   async recipes (req, res){
-    let { filter, page, limit } = req.query;
-
-    page = page || 1;
-    limit = limit || 12;
-    offset = (limit * (page-1));
+    let { filter, page = 1, limit = 12 } = req.query;
+    const offset = (limit * (page-1));   
 
     let params = {};
-
     params.paginate = {limit, offset};
-
     if(filter) params.search = filter;
 
-    const recipes = await Recipe.find(params);
+    const recipes = await LoadContentService.load('recipes', params);
 
     let pagination = {
       total: 0,
@@ -47,29 +39,15 @@ module.exports = {
 
     if (recipes[0]){
       pagination.total = Math.ceil(recipes[0].total/limit);
-    }  
-
-    for (recipe of recipes){
-      recipeImg = await Recipe.files(recipe.id);
-      recipe.cardImage = recipeImg[0].path.replace('public', '');
-    }
+    } 
 
     return res.render('public/recipes', {recipes, pagination, filter});
 
   },
   async show (req, res){
-    const {id} = req.params;
-    const recipe = await Recipe.findOne(id);
+    const recipe = await LoadContentService.load('recipe', req.params.id);
 
-    let files = await Recipe.files(recipe.id);
-
-    files = files.map((file, index) => ({
-      ...file,
-      src: `${file.path.replace('public', '')}`,
-      name: `${recipe.title} -image_${index}`
-    }));
-
-    return res.render('public/recipe_show', {recipe, files});
+    return res.render('public/recipe_show', {recipe});
   },
   //////////    ADMIN CONTROLLERS    //////////
   async adminRecipes (req, res){
@@ -94,16 +72,7 @@ module.exports = {
     return res.render('admin/recipes/index', {recipes, filtered});
   },
   async adminShow (req, res){
-    const {id} = req.params;
-    const recipe = await Recipe.findOne(id);
-
-    let files = await Recipe.files(recipe.id);
-
-    files = files.map((file, index) => ({
-      ...file,
-      src: `${file.path.replace('public', '')}`,
-      name: `${recipe.title} -image_${index}`
-    }));
+    const recipe = await LoadContentService.load('recipe', req.params.id);
 
     const editable = isEditable(
       recipe.user_id,
@@ -111,7 +80,7 @@ module.exports = {
       req.session.admin
     );
 
-    return res.render('admin/recipes/show', {recipe, files, editable});
+    return res.render('admin/recipes/show', {recipe, editable});
   },
   async create (req, res){
     const chefs = await Chef.findAll();
@@ -119,27 +88,12 @@ module.exports = {
     return res.render('admin/recipes/create', {chefs});
   },
   async edit (req, res){
-    const {id} = req.params;
-
+    const recipe = await LoadContentService.load('recipe', req.params.id);
     const chefs = await Chef.findAll();
-    const recipe = await Recipe.findOne(id);
-    let files = await Recipe.files(recipe.id);
 
-    files = files.map((file, index) => ({
-      ...file,
-      src: `${file.path.replace('public', '')}`,
-      name: `${recipe.title} -image_${index}`
-    }));
-
-    const editable = isEditable(
-      recipe.user_id,
-      req.session.userId,
-      req.session.admin
-    );
-
-    return res.render('admin/recipes/edit', { recipe, chefs, files, editable });
+    return res.render('admin/recipes/edit', {recipe, chefs}); 
   },
-  async post (req, res){
+  async post (req, res){ // Change to map
     let {title, chef_id, ingredients, preparation, information} = req.body;
     const recipeId = await Recipe.create({
       title,

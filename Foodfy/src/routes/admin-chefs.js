@@ -3,9 +3,9 @@ const routes = express.Router();
 
 const multer = require ('../app/middlewares/multerChefs');
 
-const ChefController = require('../app/controllers/ChefController');
-
 const { adminOnly } = require('../app/middlewares/session');
+
+const ChefController = require('../app/controllers/ChefController');
 
 const ChefValidator = require('../app/validators/chefs');
 

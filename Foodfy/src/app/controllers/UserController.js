@@ -20,9 +20,7 @@ module.exports={
     return res.render('admin/users/create');
   },
   async editForm(req,res){
-    const {id} = req.params;
-
-    const user = await User.find({where: { id }});
+    const user = await User.findOne(req.params.id);
 
     const userfilter = {
       id: user.id,

@@ -1,6 +1,6 @@
 const Messages = require ('../../lib/messages');
 
-const LoadChefService = require ('../services/LoadChefService');
+const LoadContentService = require ('../services/LoadContentService');
 
 const { unlinkSync } = require('fs');
 
@@ -10,86 +10,46 @@ const File = require ('../models/File');
 
 module.exports = {
   async chefs (req, res){
-    let chefs = await Chef.findAll();
-
-    for (chef of chefs){
-      const avatarFile = await Chef.avatar(chef.id);
-
-      if(avatarFile){   
-        chef.avatar = avatarFile.path.replace('public', '');
-      }
-    }    
+    const chefs = await LoadContentService.load('chefs');
     
     return res.render('public/chefs', {chefs});
   },
   async show (req, res){
     const {id} = req.params;
 
-    const chef = await Chef.findOne(id);
+    const chef = await LoadContentService.load('chef', { where: {id} });
 
-    const recipes = await Recipe.find({filters: {WHERE: {chef_id: id}}});
-
-    const avatar = await Chef.avatar(id);
-
-    if (avatar){
-      chef.avatar = avatar.path.replace('public', '');
-    }
-
-    let recipeImg = null;
-
-    for (recipe of recipes){
-      recipeImg = await Recipe.files(recipe.id);
-      recipe.cardImage = recipeImg[0].path.replace('public', '');
-    }
-
-    return res.render('public/chefs_show', {chef, recipes});
-
+    return res.render('public/chefs_show', {chef});
   },
-  //////////    ADMIN CONTROLLERS    //////////
+
+  //////////////////////    ADMIN CONTROLLERS    /////////////////////
+
   async adminChefs (req, res){
-    let chefs = await Chef.findAll();
-
-    for (chef of chefs){
-      const avatarFile = await Chef.avatar(chef.id);
-
-      if(avatarFile){   
-        chef.avatar = avatarFile.path.replace('public', '');
-      }
-    }
+    const chefs = await LoadContentService.load('chefs');
     
     return res.render('admin/chefs/index', {chefs, admin:req.session.admin});
   },
+  
   async adminShow (req, res){
     const {id} = req.params;
 
-    const chef = await Chef.findOne(id);
+    const chef = await LoadContentService.load('chef', { where: {id} });
 
-    const recipes = await Recipe.find({filters: {WHERE: {chef_id: id}}});
-
-    const avatar = await Chef.avatar(id);
-
-    if (avatar){
-      chef.avatar = avatar.path.replace('public', '');
-    }
-
-    for (recipe of recipes){
-      recipeImg = await Recipe.files(recipe.id);
-      recipe.cardImage = recipeImg[0].path.replace('public', '');
-    }
-
-    return res.render('admin/chefs/show', {chef, recipes, admin:req.session.admin});
+    return res.render('admin/chefs/show', {chef, admin:req.session.admin});
   },
+
   create (req, res){
     let error = null;
     if (req.query) error = req.query.error;
     return res.render('admin/chefs/create', {error});
   },
-  async post (req, res){
+
+  async post (req, res){ // Create a Service for saving 
     try {
       const {name} = req.body
       const chefId = await Chef.create({name});
   
-      for (const file of req.files){
+      for (const file of req.files){       // Change to req.files[].path
         const fileId = await File.create({
           name: `${name}_avatar`,
           path: file.path
@@ -103,21 +63,17 @@ module.exports = {
       console.error(err);
     }
   },
+
   async edit (req, res){
     const {id} = req.params;
     
     const message = Messages.fromQuery(req.query);
 
-    const chef = await Chef.findOne(id);
-
-    const avatar = await Chef.avatar(id);
-
-    if (avatar){
-      chef.avatar = avatar.path.replace('public', '');
-    }
+    const chef = await LoadContentService.load('chef', { where: {id} });
 
     return res.render('admin/chefs/edit', {chef, error:message.error});
   },
+
   async put (req, res){
     try {
       const {id, name} = req.body;
@@ -128,7 +84,7 @@ module.exports = {
   
         await File.delete(avatar.id);
   
-        for (const file of req.files){
+        for (const file of req.files){  // Change to req.files[].path
           const fileId = await File.create({
             name: `${name}_avatar`,
             path: file.path
@@ -138,6 +94,7 @@ module.exports = {
       }
     
       await Chef.update(id,{name});
+      
       return res.redirect(`/admin/chefs/${id}`);
       
     } catch (err) {
@@ -145,6 +102,7 @@ module.exports = {
     }
     
   },
+  
   async delete (req, res){
     try {
       const {id} = req.body;

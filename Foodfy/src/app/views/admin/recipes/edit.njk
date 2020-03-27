@@ -2,7 +2,6 @@
 
 {% block content %}
 
-{% if editable %}
   <div class="delete-container">
     <form class="admin-delete-form" action="/admin/recipes?_method=DELETE" method="POST">
       <input type="hidden" name="id" value="{{recipe.id}}">
@@ -23,8 +22,5 @@
   <input type="hidden" name="id" value="{{recipe.id}}">
 
 </form>
-
-{% endif %}
-
 
 {% endblock %}
